@@ -224,7 +224,7 @@ video_reset(int card)
     vid_table_log("VIDEO: reset (gfxcard=%d, internal=%d)\n",
 		  card, (machines[machine].flags & MACHINE_VIDEO)?1:0);
 
-    loadfont(L"roms/video/mda/mda.rom", 0);
+    loadfont(_S("roms/video/mda/mda.rom"), 0);
 
     /* Reset (deallocate) the video font arrays. */
     if (fontdatksc5601) {

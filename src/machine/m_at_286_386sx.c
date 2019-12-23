@@ -60,7 +60,7 @@ machine_at_headland_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/ami386/ami386.bin",
+    ret = bios_load_linear(_S("roms/machines/ami386/ami386.bin"),
 			   0x000f0000, 65536, 0);
 
     if (bios_only || !ret)
@@ -80,7 +80,7 @@ machine_at_tg286m_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/tg286m/ami.bin",
+    ret = bios_load_linear(_S("roms/machines/tg286m/ami.bin"),
 			   0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -106,7 +106,7 @@ machine_at_ama932j_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/ama932j/ami.bin",
+    ret = bios_load_linear(_S("roms/machines/ama932j/ami.bin"),
 			   0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -127,8 +127,8 @@ machine_at_headlandpho_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_interleaved(L"roms/machines/headlandpho/286-Headland-LO.BIN",
-				L"roms/machines/headlandpho/286-Headland-HI.BIN",
+    ret = bios_load_interleaved(_S("roms/machines/headlandpho/286-Headland-LO.BIN"),
+				_S("roms/machines/headlandpho/286-Headland-HI.BIN"),
 				0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -146,8 +146,8 @@ machine_at_headlandquadtel_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_interleaved(L"roms/machines/headlandquadtel/Amiht-l.BIN",
-				L"roms/machines/headlandquadtel/AMIHT-H.BIN",
+    ret = bios_load_interleaved(_S("roms/machines/headlandquadtel/Amiht-l.BIN"),
+				_S("roms/machines/headlandquadtel/AMIHT-H.BIN"),
 				0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -165,8 +165,8 @@ machine_at_iqs_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_interleaved(L"roms/machines/iqs/286-Headland-IQS-LO.BIN",
-				L"roms/machines/iqs/286-Headland-IQS-HI.BIN",
+    ret = bios_load_interleaved(_S("roms/machines/iqs/286-Headland-IQS-LO.BIN"),
+				_S("roms/machines/iqs/286-Headland-IQS-HI.BIN"),
 				0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -184,7 +184,7 @@ machine_at_neat_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/dtk386/3cto001.bin",
+    ret = bios_load_linear(_S("roms/machines/dtk386/3cto001.bin"),
 			   0x000f0000, 65536, 0);
 
     if (bios_only || !ret)
@@ -204,7 +204,7 @@ machine_at_neat_ami_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/ami286/amic206.bin",
+    ret = bios_load_linear(_S("roms/machines/ami286/amic206.bin"),
 			   0x000f0000, 65536, 0);
 
     if (bios_only || !ret)
@@ -226,8 +226,8 @@ machine_at_micronics386_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_interleaved(L"roms/machines/micronics386/386-Micronics 09-00021-LO.BIN",
-				L"roms/machines/micronics386/386-Micronics 09-00021-HI.BIN",
+    ret = bios_load_interleaved(_S("roms/machines/micronics386/386-Micronics 09-00021-LO.BIN"),
+				_S("roms/machines/micronics386/386-Micronics 09-00021-HI.BIN"),
 				0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -272,7 +272,7 @@ machine_at_award286_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/award286/award.bin",
+    ret = bios_load_linear(_S("roms/machines/award286/award.bin"),
 			   0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -289,7 +289,7 @@ machine_at_gw286ct_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/gw286ct/2ctc001.bin",
+    ret = bios_load_linear(_S("roms/machines/gw286ct/2ctc001.bin"),
 			   0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -306,7 +306,7 @@ machine_at_super286tr_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/super286tr/hyundai_award286.bin",
+    ret = bios_load_linear(_S("roms/machines/super286tr/hyundai_award286.bin"),
 			   0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -323,7 +323,7 @@ machine_at_spc4200p_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/spc4200p/u8.01",
+    ret = bios_load_linear(_S("roms/machines/spc4200p/u8.01"),
 			   0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -340,8 +340,8 @@ machine_at_spc4216p_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_interleaved(L"roms/machines/spc4216p/7101.u8",
-				L"roms/machines/spc4216p/ac64.u10",
+    ret = bios_load_interleaved(_S("roms/machines/spc4216p/7101.u8"),
+				_S("roms/machines/spc4216p/ac64.u10"),
 				0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -358,7 +358,7 @@ machine_at_kmxc02_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/kmxc02/3ctm005.bin",
+    ret = bios_load_linear(_S("roms/machines/kmxc02/3ctm005.bin"),
 			   0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -374,7 +374,7 @@ machine_at_deskmaster286_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/deskmaster286/SAMSUNG-DESKMASTER-28612-ROM.BIN",
+    ret = bios_load_linear(_S("roms/machines/deskmaster286/SAMSUNG-DESKMASTER-28612-ROM.BIN"),
 			   0x000f0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -390,8 +390,8 @@ machine_at_wd76c10_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_interleaved(L"roms/machines/megapc/41651-bios lo.u18",
-				L"roms/machines/megapc/211253-bios hi.u19",
+    ret = bios_load_interleaved(_S("roms/machines/megapc/41651-bios lo.u18"),
+				_S("roms/machines/megapc/211253-bios hi.u19"),
 				0x000f0000, 65536, 0x08000);
 
     if (bios_only || !ret)

@@ -845,8 +845,8 @@ machine_olim24_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_interleaved(L"roms/machines/olivetti_m24/olivetti_m24_version_1.43_low.bin",
-				L"roms/machines/olivetti_m24/olivetti_m24_version_1.43_high.bin",
+    ret = bios_load_interleaved(_S("roms/machines/olivetti_m24/olivetti_m24_version_1.43_low.bin"),
+				_S("roms/machines/olivetti_m24/olivetti_m24_version_1.43_high.bin"),
 				0x000fc000, 16384, 0);
 
     if (bios_only || !ret)
@@ -863,8 +863,8 @@ machine_olim24_init(const machine_t *model)
     io_sethandler(0x0066, 2, m24_read, NULL, NULL, NULL, NULL, NULL, m24);
 
     /* Initialize the video adapter. */
-    // loadfont(L"roms/machines/olivetti_m24/ATT-FONT-DUMPED-VERIFIED.BIN", 1);
-    loadfont(L"roms/machines/olivetti_m24/m24 graphics board go380 258 pqbq.bin", 1);
+    // loadfont(_S("roms/machines/olivetti_m24/ATT-FONT-DUMPED-VERIFIED.BIN"), 1);
+    loadfont(_S("roms/machines/olivetti_m24/m24 graphics board go380 258 pqbq.bin"), 1);
     m24->vram = malloc(0x8000);
     overscan_x = overscan_y = 16;
     mem_mapping_add(&m24->mapping, 0xb8000, 0x08000,

@@ -3185,7 +3185,7 @@ d86f_writeback(int drive)
 	/* The image is compressed. */
 
 	/* Open the original, compressed file. */
-	cf = plat_fopen(dev->original_file_name, L"wb");
+	cf = plat_fopen(dev->original_file_name, _S("wb"));
 
 	/* Write the header to the original file. */
 	fwrite(header, 1, header_size, cf);
@@ -3482,7 +3482,7 @@ d86f_export(int drive, wchar_t *fn)
 
     memset(tt, 0, 512 * sizeof(uint32_t));
 
-    f = plat_fopen(fn, L"wb");
+    f = plat_fopen(fn, _S("wb"));
     if (!f)
 	return 0;
 
@@ -3512,7 +3512,7 @@ d86f_export(int drive, wchar_t *fn)
 
     fclose(f);
 
-    f = plat_fopen(fn, L"rb+");
+    f = plat_fopen(fn, _S("rb+"));
 
     fseek(f, 8, SEEK_SET);
     fwrite(tt, 1, ((d86f_get_sides(drive) == 2) ? 2048 : 1024), f);
@@ -3546,9 +3546,9 @@ d86f_load(int drive, wchar_t *fn)
 
     writeprot[drive] = 0;
 
-    dev->f = plat_fopen(fn, L"rb+");
+    dev->f = plat_fopen(fn, _S("rb+"));
     if (! dev->f) {
-	dev->f = plat_fopen(fn, L"rb");
+	dev->f = plat_fopen(fn, _S("rb"));
 	if (! dev->f) {
 		memset(floppyfns[drive], 0, sizeof(floppyfns[drive]));
 		free(dev);
@@ -3657,13 +3657,13 @@ d86f_load(int drive, wchar_t *fn)
 
 #ifdef D86F_COMPRESS
     if (dev->is_compressed) {
-	memcpy(temp_file_name, drive ? nvr_path(L"TEMP$$$1.$$$") : nvr_path(L"TEMP$$$0.$$$"), 256);
+	memcpy(temp_file_name, drive ? nvr_path(_S("TEMP$$$1.$$$")) : nvr_path(_S("TEMP$$$0.$$$")), 256);
 	memcpy(dev->original_file_name, fn, (wcslen(fn) << 1) + 2);
 
 	fclose(dev->f);
 	dev->f = NULL;
 
-	dev->f = plat_fopen(temp_file_name, L"wb");
+	dev->f = plat_fopen(temp_file_name, _S("wb"));
 	if (! dev->f) {
 		d86f_log("86F: Unable to create temporary decompressed file\n");
 		memset(floppyfns[drive], 0, sizeof(floppyfns[drive]));
@@ -3671,7 +3671,7 @@ d86f_load(int drive, wchar_t *fn)
 		return;
 	}
 
-	tf = plat_fopen(fn, L"rb");
+	tf = plat_fopen(fn, _S("rb"));
 
 	for (i = 0; i < 8; i++) {
 		fread(&temp, 1, 2, tf);
@@ -3700,7 +3700,7 @@ d86f_load(int drive, wchar_t *fn)
 		return;
 	}
 
-	dev->f = plat_fopen(temp_file_name, L"rb+");
+	dev->f = plat_fopen(temp_file_name, _S("rb+"));
     }
 #endif
 
@@ -3743,10 +3743,10 @@ d86f_load(int drive, wchar_t *fn)
 
 #ifdef D86F_COMPRESS
 	if (dev->is_compressed)
-		dev->f = plat_fopen(temp_file_name, L"rb");
+		dev->f = plat_fopen(temp_file_name, _S("rb"));
 	else
 #endif
-		dev->f = plat_fopen(fn, L"rb");
+		dev->f = plat_fopen(fn, _S("rb"));
     }
 
     /* OK, set the drive data, other code needs it. */
@@ -3875,7 +3875,7 @@ d86f_close(int drive)
     /* Make sure the drive is alive. */
     if (dev == NULL) return;
 
-    memcpy(temp_file_name, drive ? nvr_path(L"TEMP$$$1.$$$") : nvr_path(L"TEMP$$$0.$$$"), 26);
+    memcpy(temp_file_name, drive ? nvr_path(_S("TEMP$$$1.$$$")) : nvr_path(_S("TEMP$$$0.$$$")), 26);
 
     if (d86f_has_surface_desc(drive)) {
 	for (i = 0; i < 2; i++) {

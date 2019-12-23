@@ -91,8 +91,8 @@ machine_at_batman_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear_combined(L"roms/machines/revenge/1009af2_.bio",
-				    L"roms/machines/revenge/1009af2_.bi1", 0x1c000, 128);
+    ret = bios_load_linear_combined(_S("roms/machines/revenge/1009af2_.bio"),
+				    _S("roms/machines/revenge/1009af2_.bi1"), 0x1c000, 128);
 
     if (bios_only || !ret)
 	return ret;
@@ -109,8 +109,8 @@ machine_at_ambradp60_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear_combined(L"roms/machines/ambradp60/1004AF1P.BIO",
-				    L"roms/machines/ambradp60/1004AF1P.BI1", 0x1c000, 128);
+    ret = bios_load_linear_combined(_S("roms/machines/ambradp60/1004AF1P.BIO"),
+				    _S("roms/machines/ambradp60/1004AF1P.BI1"), 0x1c000, 128);
 
     if (bios_only || !ret)
 	return ret;
@@ -127,7 +127,7 @@ machine_at_586mc1_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/586mc1/IS.34",
+    ret = bios_load_linear(_S("roms/machines/586mc1/IS.34"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -146,8 +146,8 @@ machine_at_plato_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear_combined(L"roms/machines/plato/1016ax1_.bio",
-				    L"roms/machines/plato/1016ax1_.bi1", 0x1d000, 128);
+    ret = bios_load_linear_combined(_S("roms/machines/plato/1016ax1_.bio"),
+				    _S("roms/machines/plato/1016ax1_.bi1"), 0x1d000, 128);
 
     if (bios_only || !ret)
 	return ret;
@@ -164,8 +164,8 @@ machine_at_ambradp90_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear_combined(L"roms/machines/ambradp90/1002AX1P.BIO",
-				    L"roms/machines/ambradp90/1002AX1P.BI1", 0x1d000, 128);
+    ret = bios_load_linear_combined(_S("roms/machines/ambradp90/1002AX1P.BIO"),
+				    _S("roms/machines/ambradp90/1002AX1P.BI1"), 0x1d000, 128);
 
     if (bios_only || !ret)
 	return ret;
@@ -182,7 +182,7 @@ machine_at_430nx_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/430nx/IP.20",
+    ret = bios_load_linear(_S("roms/machines/430nx/IP.20"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -201,7 +201,7 @@ machine_at_p54tp4xe_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/p54tp4xe/t15i0302.awd",
+    ret = bios_load_linear(_S("roms/machines/p54tp4xe/t15i0302.awd"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -232,8 +232,8 @@ machine_at_endeavor_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear_combined(L"roms/machines/endeavor/1006cb0_.bio",
-				    L"roms/machines/endeavor/1006cb0_.bi1", 0x1d000, 128);
+    ret = bios_load_linear_combined(_S("roms/machines/endeavor/1006cb0_.bio"),
+				    _S("roms/machines/endeavor/1006cb0_.bi1"), 0x1d000, 128);
 
     if (bios_only || !ret)
 	return ret;
@@ -274,8 +274,8 @@ machine_at_zappa_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear_combined(L"roms/machines/zappa/1006bs0_.bio",
-				    L"roms/machines/zappa/1006bs0_.bi1", 0x20000, 128);
+    ret = bios_load_linear_combined(_S("roms/machines/zappa/1006bs0_.bio"),
+				    _S("roms/machines/zappa/1006bs0_.bi1"), 0x20000, 128);
 
     if (bios_only || !ret)
 	return ret;
@@ -303,7 +303,7 @@ machine_at_mb500n_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/mb500n/031396s.bin",
+    ret = bios_load_linear(_S("roms/machines/mb500n/031396s.bin"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -333,7 +333,7 @@ machine_at_president_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/president/bios.bin",
+    ret = bios_load_linear(_S("roms/machines/president/bios.bin"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -364,7 +364,7 @@ machine_at_vectra54_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/vectra54/GT0724.22",
+    ret = bios_load_linear(_S("roms/machines/vectra54/GT0724.22"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)

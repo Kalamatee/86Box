@@ -91,15 +91,15 @@
 #include "hdd.h"
 
 
-#define XEBEC_BIOS_FILE		L"roms/hdd/st506/ibm_xebec_62x0822_1985.bin"
-#define DTC_BIOS_FILE		L"roms/hdd/st506/dtc_cxd21a.bin"
-#define ST11_BIOS_FILE_OLD	L"roms/hdd/st506/st11_bios_vers_1.7.bin"
-#define ST11_BIOS_FILE_NEW	L"roms/hdd/st506/st11_bios_vers_2.0.bin"
-#define WD1002A_WX1_BIOS_FILE	L"roms/hdd/st506/wd1002a_wx1-62-000094-032.bin"
+#define XEBEC_BIOS_FILE		_S("roms/hdd/st506/ibm_xebec_62x0822_1985.bin")
+#define DTC_BIOS_FILE		_S("roms/hdd/st506/dtc_cxd21a.bin")
+#define ST11_BIOS_FILE_OLD	_S("roms/hdd/st506/st11_bios_vers_1.7.bin")
+#define ST11_BIOS_FILE_NEW	_S("roms/hdd/st506/st11_bios_vers_2.0.bin")
+#define WD1002A_WX1_BIOS_FILE	_S("roms/hdd/st506/wd1002a_wx1-62-000094-032.bin")
 /* SuperBIOS was for both the WX1 and 27X, users jumpers readout to determine
    if to use 26 sectors per track, 26 -> 17 sectors per track translation, or
    17 sectors per track. */
-#define WD1002A_27X_BIOS_FILE	L"roms/hdd/st506/wd1002a_27x-62-000094-032.bin"
+#define WD1002A_27X_BIOS_FILE	_S("roms/hdd/st506/wd1002a_27x-62-000094-032.bin")
 
 
 #define ST506_TIME		(250 * TIMER_USEC)

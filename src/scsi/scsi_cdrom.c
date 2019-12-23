@@ -445,10 +445,10 @@ scsi_cdrom_mode_sense_load(scsi_cdrom_t *dev)
 
     memset(file_name, 0, 512 * sizeof(wchar_t));
     if (dev->drv->bus_type == CDROM_BUS_SCSI)
-	swprintf(file_name, 512, L"scsi_cdrom_%02i_mode_sense_bin", dev->id);
+	swprintf(file_name, 512, _S("scsi_cdrom_%02i_mode_sense_bin"), dev->id);
     else
-	swprintf(file_name, 512, L"cdrom_%02i_mode_sense_bin", dev->id);
-    f = plat_fopen(nvr_path(file_name), L"rb");
+	swprintf(file_name, 512, _S("cdrom_%02i_mode_sense_bin"), dev->id);
+    f = plat_fopen(nvr_path(file_name), _S("rb"));
     if (f) {
 	fread(dev->ms_pages_saved.pages[GPMODE_CDROM_AUDIO_PAGE], 1, 0x10, f);
 	fclose(f);
@@ -464,10 +464,10 @@ scsi_cdrom_mode_sense_save(scsi_cdrom_t *dev)
 
     memset(file_name, 0, 512 * sizeof(wchar_t));
     if (dev->drv->bus_type == CDROM_BUS_SCSI)
-	swprintf(file_name, 512, L"scsi_cdrom_%02i_mode_sense_bin", dev->id);
+	swprintf(file_name, 512, _S("scsi_cdrom_%02i_mode_sense_bin"), dev->id);
     else
-	swprintf(file_name, 512, L"cdrom_%02i_mode_sense_bin", dev->id);
-    f = plat_fopen(nvr_path(file_name), L"wb");
+	swprintf(file_name, 512, _S("cdrom_%02i_mode_sense_bin"), dev->id);
+    f = plat_fopen(nvr_path(file_name), _S("wb"));
     if (f) {
 	fwrite(dev->ms_pages_saved.pages[GPMODE_CDROM_AUDIO_PAGE], 1, 0x10, f);
 	fclose(f);

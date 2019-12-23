@@ -328,7 +328,7 @@ intel_flash_init(const device_t *info)
     mbstowcs(machine_name, machine_get_internal_name_ex(machine), l);
     l = wcslen(machine_name)+5;
     flash_name = (wchar_t *)malloc(l*sizeof(wchar_t));
-    swprintf(flash_name, l, L"%ls.bin", machine_name);
+    swprintf(flash_name, l, _S("%ls.bin"), machine_name);
 
     wcscpy(flash_path, flash_name);
 
@@ -416,7 +416,7 @@ intel_flash_init(const device_t *info)
     dev->command = CMD_READ_ARRAY;
     dev->status = 0;
 
-    f = nvr_fopen(flash_path, L"rb");
+    f = nvr_fopen(flash_path, _S("rb"));
     if (f) {
 	fread(&(dev->array[dev->block_start[BLOCK_MAIN1]]), dev->block_len[BLOCK_MAIN1], 1, f);
 	if (dev->block_len[BLOCK_MAIN2])
@@ -439,7 +439,7 @@ intel_flash_close(void *p)
     FILE *f;
     flash_t *dev = (flash_t *)p;
 
-    f = nvr_fopen(flash_path, L"wb");
+    f = nvr_fopen(flash_path, _S("wb"));
     fwrite(&(dev->array[dev->block_start[BLOCK_MAIN1]]), dev->block_len[BLOCK_MAIN1], 1, f);
     if (dev->block_len[BLOCK_MAIN2])
 	fwrite(&(dev->array[dev->block_start[BLOCK_MAIN2]]), dev->block_len[BLOCK_MAIN2], 1, f);

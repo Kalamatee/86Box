@@ -152,8 +152,8 @@ scsi_disk_mode_sense_load(scsi_disk_t *dev)
     memcpy(&dev->ms_pages_saved, &scsi_disk_mode_sense_pages_default, sizeof(mode_sense_pages_t));
 
     memset(file_name, 0, 512 * sizeof(wchar_t));
-    swprintf(file_name, 512, L"scsi_disk_%02i_mode_sense.bin", dev->id);
-    f = plat_fopen(nvr_path(file_name), L"rb");
+    swprintf(file_name, 512, _S("scsi_disk_%02i_mode_sense.bin"), dev->id);
+    f = plat_fopen(nvr_path(file_name), _S("rb"));
     if (f) {
 	fread(dev->ms_pages_saved.pages[0x30], 1, 0x18, f);
 	fclose(f);
@@ -168,8 +168,8 @@ scsi_disk_mode_sense_save(scsi_disk_t *dev)
     wchar_t file_name[512];
 
     memset(file_name, 0, 512 * sizeof(wchar_t));
-    swprintf(file_name, 512, L"scsi_disk_%02i_mode_sense.bin", dev->id);
-    f = plat_fopen(nvr_path(file_name), L"wb");
+    swprintf(file_name, 512, _S("scsi_disk_%02i_mode_sense.bin"), dev->id);
+    f = plat_fopen(nvr_path(file_name), _S("wb"));
     if (f) {
 	fwrite(dev->ms_pages_saved.pages[0x30], 1, 0x18, f);
 	fclose(f);

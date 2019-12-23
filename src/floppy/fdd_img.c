@@ -648,9 +648,9 @@ img_load(int drive, wchar_t *fn)
     dev = (img_t *)malloc(sizeof(img_t));
     memset(dev, 0x00, sizeof(img_t));
 
-    dev->f = plat_fopen(fn, L"rb+");
+    dev->f = plat_fopen(fn, _S("rb+"));
     if (dev->f == NULL) {
-	dev->f = plat_fopen(fn, L"rb");
+	dev->f = plat_fopen(fn, _S("rb"));
 	if (dev->f == NULL) {
 		free(dev);
 		memset(floppyfns[drive], 0, sizeof(floppyfns[drive]));
@@ -667,13 +667,13 @@ img_load(int drive, wchar_t *fn)
 
     dev->interleave = dev->skew = 0;
 
-    if (! wcscasecmp(ext, L"DDI")) {
+    if (! wcscasecmp(ext, _S("DDI"))) {
 	ddi = 1;
 	dev->base = 0x2400;
     } else
 	dev->base = 0;
 
-    if (! wcscasecmp(ext, L"FDI")) {
+    if (! wcscasecmp(ext, _S("FDI"))) {
 	/* This is a Japanese FDI image, so let's read the header */
 	img_log("img_load(): File is a Japanese FDI image...\n");
 	fseek(dev->f, 0x10, SEEK_SET);
@@ -715,7 +715,7 @@ img_load(int drive, wchar_t *fn)
 		img_log("img_load(): File is a FDF image...\n");
 		fwriteprot[drive] = writeprot[drive] = 1;
 		fclose(dev->f);
-		dev->f = plat_fopen(fn, L"rb");
+		dev->f = plat_fopen(fn, _S("rb"));
 
 		fdf = 1;
 		cqm = 0;
@@ -855,7 +855,7 @@ img_load(int drive, wchar_t *fn)
 		img_log("img_load(): File is a CopyQM image...\n");
 		fwriteprot[drive] = writeprot[drive] = 1;
 		fclose(dev->f);
-		dev->f = plat_fopen(fn, L"rb");
+		dev->f = plat_fopen(fn, _S("rb"));
 
 		fseek(dev->f, 0x03, SEEK_SET);
 		fread(&bpb_bps, 1, 2, dev->f);

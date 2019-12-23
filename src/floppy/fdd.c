@@ -105,38 +105,38 @@ static const struct
     int size;
 } loaders[]=
 {
-    {L"001",	 img_load,	 img_close, -1},
-    {L"002",	 img_load,	 img_close, -1},
-    {L"003",	 img_load,	 img_close, -1},
-    {L"004",	 img_load,	 img_close, -1},
-    {L"005",	 img_load,	 img_close, -1},
-    {L"006",	 img_load,	 img_close, -1},
-    {L"007",	 img_load,	 img_close, -1},
-    {L"008",	 img_load,	 img_close, -1},
-    {L"009",	 img_load,	 img_close, -1},
-    {L"010",	 img_load,	 img_close, -1},
-    {L"12",	 img_load,	 img_close, -1},
-    {L"144",	 img_load,	 img_close, -1},
-    {L"360",	 img_load,	 img_close, -1},
-    {L"720",	 img_load,	 img_close, -1},
-    {L"86F",	d86f_load,	d86f_close, -1},
-    {L"BIN",	 img_load,	 img_close, -1},
-    {L"CQ",	 img_load,	 img_close, -1},
-    {L"CQM",	 img_load,	 img_close, -1},
-    {L"DDI",	 img_load,	 img_close, -1},
-    {L"DSK",	 img_load,	 img_close, -1},
-    {L"FDI",	 fdi_load,	 fdi_close, -1},
-    {L"FDF",	 img_load,	 img_close, -1},
-    {L"FLP",	 img_load,	 img_close, -1},
-    {L"HDM",	 img_load,	 img_close, -1},
-    {L"IMA",	 img_load,	 img_close, -1},
-    {L"IMD",	 imd_load,	 imd_close, -1},
-    {L"IMG",	 img_load,	 img_close, -1},
-    {L"JSON",	json_load,	json_close, -1},
-    {L"MFM",	 mfm_load,	 mfm_close, -1},
-    {L"TD0",	 td0_load,	 td0_close, -1},
-    {L"VFD",	 img_load,	 img_close, -1},
-    {L"XDF",	 img_load,	 img_close, -1},
+    {_S("001"),	 img_load,	 img_close, -1},
+    {_S("002"),	 img_load,	 img_close, -1},
+    {_S("003"),	 img_load,	 img_close, -1},
+    {_S("004"),	 img_load,	 img_close, -1},
+    {_S("005"),	 img_load,	 img_close, -1},
+    {_S("006"),	 img_load,	 img_close, -1},
+    {_S("007"),	 img_load,	 img_close, -1},
+    {_S("008"),	 img_load,	 img_close, -1},
+    {_S("009"),	 img_load,	 img_close, -1},
+    {_S("010"),	 img_load,	 img_close, -1},
+    {_S("12"),	 img_load,	 img_close, -1},
+    {_S("144"),	 img_load,	 img_close, -1},
+    {_S("360"),	 img_load,	 img_close, -1},
+    {_S("720"),	 img_load,	 img_close, -1},
+    {_S("86F"),	d86f_load,	d86f_close, -1},
+    {_S("BIN"),	 img_load,	 img_close, -1},
+    {_S("CQ"),	 img_load,	 img_close, -1},
+    {_S("CQM"),	 img_load,	 img_close, -1},
+    {_S("DDI"),	 img_load,	 img_close, -1},
+    {_S("DSK"),	 img_load,	 img_close, -1},
+    {_S("FDI"),	 fdi_load,	 fdi_close, -1},
+    {_S("FDF"),	 img_load,	 img_close, -1},
+    {_S("FLP"),	 img_load,	 img_close, -1},
+    {_S("HDM"),	 img_load,	 img_close, -1},
+    {_S("IMA"),	 img_load,	 img_close, -1},
+    {_S("IMD"),	 imd_load,	 imd_close, -1},
+    {_S("IMG"),	 img_load,	 img_close, -1},
+    {_S("JSON"),	json_load,	json_close, -1},
+    {_S("MFM"),	 mfm_load,	 mfm_close, -1},
+    {_S("TD0"),	 td0_load,	 td0_close, -1},
+    {_S("VFD"),	 img_load,	 img_close, -1},
+    {_S("XDF"),	 img_load,	 img_close, -1},
     {0,		 0,		 0,	     0}
 };
 
@@ -488,7 +488,7 @@ fdd_load(int drive, wchar_t *fn)
     p = plat_get_extension(fn);
     if (!p)
 	return;
-    f = plat_fopen(fn, L"rb");
+    f = plat_fopen(fn, _S("rb"));
     if (!f)
 	return;
     fseek(f, -1, SEEK_END);

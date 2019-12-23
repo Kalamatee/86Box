@@ -454,7 +454,7 @@ ps1_setup(int model)
 
     if (model == 2011) {
 	rom_init(&ps->high_rom,
-		 L"roms/machines/ibmps1es/f80000.bin",
+		 _S("roms/machines/ibmps1es/f80000.bin"),
 		 0xf80000, 0x80000, 0x7ffff, 0, MEM_MAPPING_EXTERNAL);
 
 	lpt2_remove();
@@ -483,7 +483,7 @@ ps1_setup(int model)
 
 #if 0
 	rom_init(&ps->high_rom,
-		 L"roms/machines/ibmps1_2121/fc0000.bin",
+		 _S("roms/machines/ibmps1_2121/fc0000.bin"),
 		 0xfc0000, 0x20000, 0x1ffff, 0, MEM_MAPPING_EXTERNAL);
 #endif
 
@@ -535,7 +535,7 @@ machine_ps1_m2011_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/ibmps1es/f80000.bin",
+    ret = bios_load_linear(_S("roms/machines/ibmps1es/f80000.bin"),
 			   0x000e0000, 131072, 0x60000);
 
     if (bios_only || !ret)
@@ -554,7 +554,7 @@ machine_ps1_m2121_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/ibmps1_2121/fc0000.bin",
+    ret = bios_load_linear(_S("roms/machines/ibmps1_2121/fc0000.bin"),
 			   0x000e0000, 131072, 0x20000);
 
     if (bios_only || !ret)
@@ -574,7 +574,7 @@ machine_ps1_m2133_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/ibmps1_2133/ps1_2133_52g2974_rom.bin",
+    ret = bios_load_linear(_S("roms/machines/ibmps1_2133/ps1_2133_52g2974_rom.bin"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)

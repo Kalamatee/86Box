@@ -48,14 +48,14 @@
 # define PRINTER_H
 
 
-#define FONT_FILE_DOTMATRIX	L"dotmatrix.ttf"
+#define FONT_FILE_DOTMATRIX	_S("dotmatrix.ttf")
 
-#define FONT_FILE_ROMAN		L"roman.ttf"
-#define FONT_FILE_SANSSERIF	L"sansserif.ttf"
-#define FONT_FILE_COURIER	L"courier.ttf"
-#define FONT_FILE_SCRIPT	L"script.ttf"
-#define FONT_FILE_OCRA		L"ocra.ttf"
-#define FONT_FILE_OCRB		L"ocra.ttf"
+#define FONT_FILE_ROMAN		_S("roman.ttf")
+#define FONT_FILE_SANSSERIF	_S("sansserif.ttf")
+#define FONT_FILE_COURIER	_S("courier.ttf")
+#define FONT_FILE_SCRIPT	_S("script.ttf")
+#define FONT_FILE_OCRA		_S("ocra.ttf")
+#define FONT_FILE_OCRB		_S("ocra.ttf")
 
 
 extern void

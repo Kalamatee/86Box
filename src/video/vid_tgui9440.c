@@ -106,8 +106,8 @@
   writes out 16 bytes. I don't think the access size or host data has any affect,
   but the Windows 3.1 driver always reads bytes and write words of 0xffff.*/  
 
-#define ROM_TGUI_9400CXI	L"roms/video/tgui9440/9400CXI.vbi"
-#define ROM_TGUI_9440		L"roms/video/tgui9440/9440.vbi"
+#define ROM_TGUI_9400CXI	_S("roms/video/tgui9440/9400CXI.vbi")
+#define ROM_TGUI_9440		_S("roms/video/tgui9440/9440.vbi")
 
 #define EXT_CTRL_16BIT            0x01
 #define EXT_CTRL_MONO_EXPANSION   0x02
@@ -1695,12 +1695,12 @@ static void *tgui_init(const device_t *info)
 
 static int tgui9400cxi_available()
 {
-        return rom_present(L"roms/video/tgui9440/9400CXI.vbi");
+        return rom_present(_S("roms/video/tgui9440/9400CXI.vbi"));
 }
 
 static int tgui9440_available()
 {
-        return rom_present(L"roms/video/tgui9440/9440.vbi");
+        return rom_present(_S("roms/video/tgui9440/9440.vbi"));
 }
 
 void tgui_close(void *p)

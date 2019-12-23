@@ -40,8 +40,8 @@
 #include "vid_stg_ramdac.h"
 
 
-#define BIOS_ROM_PATH_DIAMOND	L"roms/video/et4000w32/et4000w32.bin"
-#define BIOS_ROM_PATH_CARDEX	L"roms/video/et4000w32/cardex.vbi"
+#define BIOS_ROM_PATH_DIAMOND	_S("roms/video/et4000w32/et4000w32.bin")
+#define BIOS_ROM_PATH_CARDEX	_S("roms/video/et4000w32/cardex.vbi")
 
 
 #define FIFO_SIZE 65536

@@ -38,9 +38,9 @@
 void ega_doblit(int y1, int y2, int wx, int wy, ega_t *ega);
 
 
-#define BIOS_IBM_PATH	L"roms/video/ega/ibm_6277356_ega_card_u44_27128.bin"
-#define BIOS_CPQ_PATH	L"roms/video/ega/108281-001.bin"
-#define BIOS_SEGA_PATH	L"roms/video/ega/lega.vbi"
+#define BIOS_IBM_PATH	_S("roms/video/ega/ibm_6277356_ega_card_u44_27128.bin")
+#define BIOS_CPQ_PATH	_S("roms/video/ega/108281-001.bin")
+#define BIOS_SEGA_PATH	_S("roms/video/ega/lega.vbi")
 
 
 enum {

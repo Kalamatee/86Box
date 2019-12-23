@@ -131,15 +131,15 @@ convert_to_pdf(ps_t *dev)
 
     output_fn[0] = 0;
     wcscat(output_fn, input_fn);
-    wcscpy(output_fn + wcslen(output_fn) - 3, L".pdf");
+    wcscpy(output_fn + wcslen(output_fn) - 3, _S(".pdf"));
 
-    gsargv[0] = L"";
-    gsargv[1] = L"-dNOPAUSE";
-    gsargv[2] = L"-dBATCH";
-    gsargv[3] = L"-dSAFER";
-    gsargv[4] = L"-sDEVICE=pdfwrite";
-    gsargv[5] = L"-q";
-    gsargv[6] = L"-o";
+    gsargv[0] = _S("");
+    gsargv[1] = _S("-dNOPAUSE");
+    gsargv[2] = _S("-dBATCH");
+    gsargv[3] = _S("-dSAFER");
+    gsargv[4] = _S("-sDEVICE=pdfwrite");
+    gsargv[5] = _S("-q");
+    gsargv[6] = _S("-o");
     gsargv[7] = output_fn;
     gsargv[8] = input_fn;
 
@@ -192,14 +192,14 @@ write_buffer(ps_t *dev, bool newline)
     }
 
     if (dev->filename[0] == 0) {
-	plat_tempfile(dev->filename, NULL, L".ps");
+	plat_tempfile(dev->filename, NULL, _S(".ps"));
     }
 
     path[0] = 0;
     wcscat(path, dev->printer_path);
     wcscat(path, dev->filename);
 
-    fp = plat_fopen(path, L"a");
+    fp = plat_fopen(path, _S("a"));
     if (fp == NULL) {
 	return;
     }
@@ -361,7 +361,7 @@ ps_init(void *lpt)
 
     // Cache print folder path
     memset(dev->printer_path, 0x00, sizeof(dev->printer_path));
-    plat_append_filename(dev->printer_path, usr_path, L"printer");
+    plat_append_filename(dev->printer_path, usr_path, _S("printer"));
     if (!plat_dir_check(dev->printer_path)) {
 	plat_dir_create(dev->printer_path);
     }

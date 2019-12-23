@@ -265,9 +265,9 @@ config_read(wchar_t *fn)
     FILE *f;
 
 #if defined(ANSI_CFG) || !defined(_WIN32)
-    f = plat_fopen(fn, L"rt");
+    f = plat_fopen(fn, _S("rt"));
 #else
-    f = plat_fopen(fn, L"rt, ccs=UNICODE");
+    f = plat_fopen(fn, _S("rt, ccs=UNICODE"));
 #endif
     if (f == NULL) return(0);
 	
@@ -282,29 +282,29 @@ config_read(wchar_t *fn)
 	if (feof(f)) break;
 
 	/* Make sure there are no stray newlines or hard-returns in there. */
-	if (buff[wcslen(buff)-1] == L'\n') buff[wcslen(buff)-1] = L'\0';
-	if (buff[wcslen(buff)-1] == L'\r') buff[wcslen(buff)-1] = L'\0';
+	if (buff[wcslen(buff)-1] == _S('\n')) buff[wcslen(buff)-1] = _S('\0');
+	if (buff[wcslen(buff)-1] == _S('\r')) buff[wcslen(buff)-1] = _S('\0');
 
 	/* Skip any leading whitespace. */
 	c = 0;
-	while ((buff[c] == L' ') || (buff[c] == L'\t'))
+	while ((buff[c] == _S(' ')) || (buff[c] == _S('\t')))
 		  c++;
 
 	/* Skip empty lines. */
-	if (buff[c] == L'\0') continue;
+	if (buff[c] == _S('\0')) continue;
 
 	/* Skip lines that (only) have a comment. */
-	if ((buff[c] == L'#') || (buff[c] == L';')) continue;
+	if ((buff[c] == _S('#')) || (buff[c] == _S(';'))) continue;
 
-	if (buff[c] == L'[') {	/*Section*/
+	if (buff[c] == _S('[')) {	/*Section*/
 		c++;
 		d = 0;
-		while (buff[c] != L']' && buff[c])
+		while (buff[c] != _S(']') && buff[c])
 			wctomb(&(sname[d++]), buff[c++]);
-		sname[d] = L'\0';
+		sname[d] = _S('\0');
 
 		/* Is the section name properly terminated? */
-		if (buff[c] != L']') continue;
+		if (buff[c] != _S(']')) continue;
 
 		/* Create a new section and insert it. */
 		ns = malloc(sizeof(section_t));
@@ -319,19 +319,19 @@ config_read(wchar_t *fn)
 
 	/* Get the variable name. */
 	d = 0;
-	while ((buff[c] != L'=') && (buff[c] != L' ') && buff[c])
+	while ((buff[c] != _S('=')) && (buff[c] != _S(' ')) && buff[c])
 		wctomb(&(ename[d++]), buff[c++]);
-	ename[d] = L'\0';
+	ename[d] = _S('\0');
 
 	/* Skip incomplete lines. */
-	if (buff[c] == L'\0') continue;
+	if (buff[c] == _S('\0')) continue;
 
 	/* Look for =, skip whitespace. */
-	while ((buff[c] == L'=' || buff[c] == L' ') && buff[c])
+	while ((buff[c] == _S('=') || buff[c] == _S(' ')) && buff[c])
 		c++;
 
 	/* Skip incomplete lines. */
-	if (buff[c] == L'\0') continue;
+	if (buff[c] == _S('\0')) continue;
 
 	/* This is where the value part starts. */
 	d = c;
@@ -341,7 +341,7 @@ config_read(wchar_t *fn)
 	memset(ne, 0x00, sizeof(entry_t));
 	strncpy(ne->name, ename, sizeof(ne->name));
 	wcsncpy(ne->wdata, &buff[d], sizeof_w(ne->wdata)-1);
-	ne->wdata[sizeof_w(ne->wdata)-1] = L'\0';
+	ne->wdata[sizeof_w(ne->wdata)-1] = _S('\0');
 	wcstombs(ne->data, ne->wdata, sizeof(ne->data));
 	ne->data[sizeof(ne->data)-1] = '\0';
 
@@ -373,9 +373,9 @@ config_write(wchar_t *fn)
     int fl = 0;
 
 #if defined(ANSI_CFG) || !defined(_WIN32)
-    f = plat_fopen(fn, L"wt");
+    f = plat_fopen(fn, _S("wt"));
 #else
-    f = plat_fopen(fn, L"wt, ccs=UNICODE");
+    f = plat_fopen(fn, _S("wt, ccs=UNICODE"));
 #endif
     if (f == NULL) return;
 
@@ -386,9 +386,9 @@ config_write(wchar_t *fn)
 	if (sec->name[0]) {
 		mbstowcs(wtemp, sec->name, strlen(sec->name)+1);
 		if (fl)
-			fwprintf(f, L"\n[%ls]\n", wtemp);
+			fwprintf(f, _S("\n[%ls]\n"), wtemp);
 		  else
-			fwprintf(f, L"[%ls]\n", wtemp);
+			fwprintf(f, _S("[%ls]\n"), wtemp);
 		fl++;
 	}
 
@@ -396,10 +396,10 @@ config_write(wchar_t *fn)
 	while (ent != NULL) {
 		if (ent->name[0] != '\0') {
 			mbstowcs(wtemp, ent->name, sizeof_w(wtemp));
-			if (ent->wdata[0] == L'\0')
-				fwprintf(f, L"%ls = \n", wtemp);
+			if (ent->wdata[0] == _S('\0'))
+				fwprintf(f, _S("%ls = \n"), wtemp);
 			  else
-				fwprintf(f, L"%ls = %ls\n", wtemp, ent->wdata);
+				fwprintf(f, _S("%ls = %ls\n"), wtemp, ent->wdata);
 			fl++;
 		}
 
@@ -418,9 +418,9 @@ static void
 config_new(void)
 {
 #if defined(ANSI_CFG) || !defined(_WIN32)
-    FILE *f = _wfopen(config_file, L"wt");
+    FILE *f = _wfopen(config_file, _S("wt"));
 #else
-    FILE *f = _wfopen(config_file, L"wt, ccs=UNICODE");
+    FILE *f = _wfopen(config_file, _S("wt, ccs=UNICODE"));
 #endif
 
     if (file != NULL)
@@ -913,7 +913,7 @@ load_hard_disks(void)
 	memset(hdd[c].fn, 0x00, sizeof(hdd[c].fn));
 	memset(hdd[c].prev_fn, 0x00, sizeof(hdd[c].prev_fn));
 	sprintf(temp, "hdd_%02i_fn", c+1);
-	wp = config_get_wstring(cat, temp, L"");
+	wp = config_get_wstring(cat, temp, _S(""));
 
 #if 0
 	/*
@@ -978,7 +978,7 @@ load_floppy_drives(void)
 		fdd_set_type(c, 13);
 
 	sprintf(temp, "fdd_%02i_fn", c + 1);
-	wp = config_get_wstring(cat, temp, L"");
+	wp = config_get_wstring(cat, temp, _S(""));
 
 #if 0
 	/*
@@ -999,7 +999,7 @@ load_floppy_drives(void)
 #endif
 	wcsncpy(floppyfns[c], wp, sizeof_w(floppyfns[c]));
 
-	/* if (*wp != L'\0')
+	/* if (*wp != _S('\0'))
 		config_log("Floppy%d: %ls\n", c, floppyfns[c]); */
 	sprintf(temp, "fdd_%02i_writeprot", c+1);
 	ui_writeprot[c] = !!config_get_int(cat, temp, 0);
@@ -1088,7 +1088,7 @@ load_other_removable_devices(void)
 	}
 
 	sprintf(temp, "cdrom_%02i_image_path", c+1);
-	wp = config_get_wstring(cat, temp, L"");
+	wp = config_get_wstring(cat, temp, _S(""));
 
 #if 0
 	/*
@@ -1174,7 +1174,7 @@ load_other_removable_devices(void)
 	}
 
 	sprintf(temp, "zip_%02i_image_path", c+1);
-	wp = config_get_wstring(cat, temp, L"");
+	wp = config_get_wstring(cat, temp, _S(""));
 
 #if 0
 	/*

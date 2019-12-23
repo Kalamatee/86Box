@@ -144,8 +144,8 @@ machine_at_portableii_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_interleaved(L"roms/machines/portableii/109740-001.rom",
-				L"roms/machines/portableii/109739-001.rom",
+    ret = bios_load_interleaved(_S("roms/machines/portableii/109740-001.rom"),
+				_S("roms/machines/portableii/109739-001.rom"),
 				0x000f8000, 32768, 0);
 
     if (bios_only || !ret)
@@ -163,8 +163,8 @@ machine_at_portableiii_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_interleaved(L"roms/machines/portableiii/109738-002.bin",
-				L"roms/machines/portableiii/109737-002.bin",
+    ret = bios_load_interleaved(_S("roms/machines/portableiii/109738-002.bin"),
+				_S("roms/machines/portableiii/109737-002.bin"),
 				0x000f0000, 65536, 0);
 
     if (bios_only || !ret)
@@ -181,8 +181,8 @@ machine_at_portableiii386_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_interleaved(L"roms/machines/portableiii/109738-002.bin",
-				L"roms/machines/portableiii/109737-002.bin",
+    ret = bios_load_interleaved(_S("roms/machines/portableiii/109738-002.bin"),
+				_S("roms/machines/portableiii/109737-002.bin"),
 				0x000f0000, 65536, 0);
 
     if (bios_only || !ret)

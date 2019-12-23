@@ -307,7 +307,7 @@ network_reset(void)
     /* If no active card, we're done. */
     if ((network_type==NET_TYPE_NONE) || (network_card==0)) return;
 
-    network_mutex = thread_create_mutex(L"VARCem.NetMutex");
+    network_mutex = thread_create_mutex(_S("VARCem.NetMutex"));
 
     /* Initialize the platform module. */
     switch(network_type) {

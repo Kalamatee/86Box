@@ -7730,12 +7730,12 @@ void voodoo_card_close(voodoo_t *voodoo)
         int c;
         
 #ifndef RELEASE_BUILD        
-        f = rom_fopen(L"texram.dmp", L"wb");
+        f = rom_fopen(_S("texram.dmp"), _S("wb"));
         fwrite(voodoo->tex_mem[0], voodoo->texture_size*1024*1024, 1, f);
         fclose(f);
         if (voodoo->dual_tmus)
         {
-                f = rom_fopen(L"texram2.dmp", L"wb");
+                f = rom_fopen(_S("texram2.dmp"), _S("wb"));
                 fwrite(voodoo->tex_mem[1], voodoo->texture_size*1024*1024, 1, f);
                 fclose(f);
         }

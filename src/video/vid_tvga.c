@@ -36,8 +36,8 @@
 #define TVGA8900B_ID		0x03
 #define TVGA8900CLD_ID		0x33
 
-#define ROM_TVGA_8900B		L"roms/video/tvga/tvga8900B.VBI"
-#define ROM_TVGA_8900CLD	L"roms/video/tvga/trident.bin"
+#define ROM_TVGA_8900B		_S("roms/video/tvga/tvga8900B.VBI")
+#define ROM_TVGA_8900CLD	_S("roms/video/tvga/trident.bin")
 
 typedef struct tvga_t
 {

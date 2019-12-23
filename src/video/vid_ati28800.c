@@ -44,18 +44,18 @@
 #define VGAWONDERXL24		2
 #endif
 
-#define BIOS_ATIKOR_PATH	L"roms/video/ati28800/atikorvga.bin"
-#define FONT_ATIKOR_PATH	L"roms/video/ati28800/ati_ksc5601.rom"
+#define BIOS_ATIKOR_PATH	_S("roms/video/ati28800/atikorvga.bin")
+#define FONT_ATIKOR_PATH	_S("roms/video/ati28800/ati_ksc5601.rom")
 
-#define BIOS_VGAXL_EVEN_PATH	L"roms/video/ati28800/xleven.bin"
-#define BIOS_VGAXL_ODD_PATH	L"roms/video/ati28800/xlodd.bin"
+#define BIOS_VGAXL_EVEN_PATH	_S("roms/video/ati28800/xleven.bin")
+#define BIOS_VGAXL_ODD_PATH	_S("roms/video/ati28800/xlodd.bin")
 
 #if defined(DEV_BRANCH) && defined(USE_XL24)
-#define BIOS_XL24_EVEN_PATH	L"roms/video/ati28800/112-14318-102.bin"
-#define BIOS_XL24_ODD_PATH	L"roms/video/ati28800/112-14319-102.bin"
+#define BIOS_XL24_EVEN_PATH	_S("roms/video/ati28800/112-14318-102.bin")
+#define BIOS_XL24_ODD_PATH	_S("roms/video/ati28800/112-14319-102.bin")
 #endif
 
-#define BIOS_ROM_PATH		L"roms/video/ati28800/bios.bin"
+#define BIOS_ROM_PATH		_S("roms/video/ati28800/bios.bin")
 
 
 typedef struct ati28800_t
@@ -499,7 +499,7 @@ ati28800k_init(const device_t *info)
     ati28800->svga.miscout = 1;
     ati28800->svga.ksc5601_sbyte_mask = 0;
 
-    ati_eeprom_load(&ati28800->eeprom, L"atikorvga.nvr", 0);
+    ati_eeprom_load(&ati28800->eeprom, _S("atikorvga.nvr"), 0);
 
     return ati28800;
 }
@@ -565,17 +565,17 @@ ati28800_init(const device_t *info)
 
     switch (info->local) {
 	case VGAWONDERXL:
-		ati_eeprom_load(&ati28800->eeprom, L"ati28800xl.nvr", 0);
+		ati_eeprom_load(&ati28800->eeprom, _S("ati28800xl.nvr"), 0);
 		break;
 
 #if defined(DEV_BRANCH) && defined(USE_XL24)
 	case VGAWONDERXL24:
-		ati_eeprom_load(&ati28800->eeprom, L"ati28800xl24.nvr", 0);
+		ati_eeprom_load(&ati28800->eeprom, _S("ati28800xl24.nvr"), 0);
 		break;
 #endif
 
 	default:
-		ati_eeprom_load(&ati28800->eeprom, L"ati28800.nvr", 0);
+		ati_eeprom_load(&ati28800->eeprom, _S("ati28800.nvr"), 0);
 		break;
     }	
 

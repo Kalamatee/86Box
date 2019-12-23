@@ -35,10 +35,10 @@
 
 
 #if defined(DEV_BRANCH) && defined(USE_VGAWONDER)
-#define BIOS_ROM_PATH_WONDER	L"roms/video/ati18800/VGA_Wonder_V3-1.02.bin"
+#define BIOS_ROM_PATH_WONDER	_S("roms/video/ati18800/VGA_Wonder_V3-1.02.bin")
 #endif
-#define BIOS_ROM_PATH_VGA88	L"roms/video/ati18800/vga88.bin"
-#define BIOS_ROM_PATH_EDGE16	L"roms/video/ati18800/vgaedge16.vbi"
+#define BIOS_ROM_PATH_VGA88	_S("roms/video/ati18800/vga88.bin")
+#define BIOS_ROM_PATH_EDGE16	_S("roms/video/ati18800/vgaedge16.vbi")
 
 enum {
 #if defined(DEV_BRANCH) && defined(USE_VGAWONDER)
@@ -222,7 +222,7 @@ static void *ati18800_init(const device_t *info)
 
         ati18800->svga.miscout = 1;
 
-        ati_eeprom_load(&ati18800->eeprom, L"ati18800.nvr", 0);
+        ati_eeprom_load(&ati18800->eeprom, _S("ati18800.nvr"), 0);
 
         return ati18800;
 }

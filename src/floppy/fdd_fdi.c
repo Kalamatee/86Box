@@ -331,7 +331,7 @@ fdi_load(int drive, wchar_t *fn)
     dev = (fdi_t *)malloc(sizeof(fdi_t));
     memset(dev, 0x00, sizeof(fdi_t));
 
-    dev->f = plat_fopen(fn, L"rb");
+    dev->f = plat_fopen(fn, _S("rb"));
     if (dev == NULL) {
 	free(dev);
 	memset(floppyfns[drive], 0, sizeof(floppyfns[drive]));

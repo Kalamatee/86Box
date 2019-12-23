@@ -97,10 +97,10 @@ image_is_hdi(const wchar_t *s)
     wchar_t ext[5] = { 0, 0, 0, 0, 0 };
     char *ws = (char *) s;
     len = wcslen(s);
-    if ((len < 4) || (s[0] == L'.'))
+    if ((len < 4) || (s[0] == _S('.')))
 	return 0;
-    memcpy(ext, ws + ((len - 4) << 1), 8);
-    if (! wcscasecmp(ext, L".HDI"))
+    memcpy(ext, ws + ((len - 4) * sizeof(wchar_t)), sizeof(ext));
+    if (! wcscasecmp(ext, _S(".HDI")))
 	return 1;
     else
 	return 0;
@@ -117,12 +117,12 @@ image_is_hdx(const wchar_t *s, int check_signature)
     char *ws = (char *) s;
     wchar_t ext[5] = { 0, 0, 0, 0, 0 };
     len = wcslen(s);
-    if ((len < 4) || (s[0] == L'.'))
+    if ((len < 4) || (s[0] == _S('.')))
 	return 0;
-    memcpy(ext, ws + ((len - 4) << 1), 8);
-    if (wcscasecmp(ext, L".HDX") == 0) {
+    memcpy(ext, ws + ((len - 4) * sizeof(wchar_t)), sizeof(ext));
+    if (wcscasecmp(ext, _S(".HDX")) == 0) {
 	if (check_signature) {
-		f = plat_fopen((wchar_t *)s, L"rb");
+		f = plat_fopen((wchar_t *)s, _S("rb"));
 		if (!f)
 			return 0;
 		fseeko64(f, 0, SEEK_END);
@@ -153,12 +153,12 @@ image_is_vhd(const wchar_t *s, int check_signature)
     char *ws = (char *) s;
     wchar_t ext[5] = { 0, 0, 0, 0, 0 };
     len = wcslen(s);
-    if ((len < 4) || (s[0] == L'.'))
+    if ((len < 4) || (s[0] == _S('.')))
 	return 0;
-    memcpy(ext, ws + ((len - 4) << 1), 8);
-    if (wcscasecmp(ext, L".VHD") == 0) {
+    memcpy(ext, ws + ((len - 4) * sizeof(wchar_t)), sizeof(ext));
+    if (wcscasecmp(ext, _S(".VHD")) == 0) {
 	if (check_signature) {
-		f = plat_fopen((wchar_t *)s, L"rb");
+		f = plat_fopen((wchar_t *)s, _S("rb"));
 		if (!f)
 			return 0;
 		fseeko64(f, 0, SEEK_END);
@@ -558,7 +558,7 @@ hdd_image_load(int id)
 	memset(hdd[id].fn, 0, sizeof(hdd[id].fn));
 	return 0;
     }
-    hdd_images[id].file = plat_fopen(fn, L"rb+");
+    hdd_images[id].file = plat_fopen(fn, _S("rb+"));
     if (hdd_images[id].file == NULL) {
 	/* Failed to open existing hard disk image */
 	if (errno == ENOENT) {
@@ -570,7 +570,7 @@ hdd_image_load(int id)
 			return 0;
 		}
 
-		hdd_images[id].file = plat_fopen(fn, L"wb+");
+		hdd_images[id].file = plat_fopen(fn, _S("wb+"));
 		if (hdd_images[id].file == NULL) {
 			hdd_image_log("Unable to open image\n");
 			memset(hdd[id].fn, 0, sizeof(hdd[id].fn));

@@ -421,7 +421,7 @@ new_page(escp_t *dev, int8_t save, int8_t resetx)
     memset(dev->page->pixels, 0x00, dev->page->pitch * dev->page->h);
 
     /* Make the page's file name. */
-    plat_tempfile(dev->page_fn, NULL, L".png");
+    plat_tempfile(dev->page_fn, NULL, _S(".png"));
 }
 
 
@@ -2058,10 +2058,10 @@ escp_init(void *lpt)
     /* Create a full pathname for the font files. */
     wcscpy(dev->fontpath, exe_path);
     plat_path_slash(dev->fontpath);
-    wcscat(dev->fontpath, L"roms/printer/fonts/");
+    wcscat(dev->fontpath, _S("roms/printer/fonts/"));
 
     /* Create the full path for the page images. */
-    plat_append_filename(dev->pagepath, usr_path, L"printer");
+    plat_append_filename(dev->pagepath, usr_path, _S("printer"));
     if (! plat_dir_check(dev->pagepath))
         plat_dir_create(dev->pagepath);
     plat_path_slash(dev->pagepath);

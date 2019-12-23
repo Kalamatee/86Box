@@ -40,17 +40,17 @@
 #include "vid_icd2061.h"
 #include "../cpu/cpu.h"
 
-#define ROM_ORCHID_86C911		L"roms/video/s3/BIOS.BIN"
-#define ROM_METHEUS_86C928		L"roms/video/s3/928.vbi"
-#define ROM_V7MIRAGE_86C801		L"roms/video/s3/v7mirage.vbi"
-#define ROM_PHOENIX_86C805		L"roms/video/s3/805.vbi"
-#define ROM_PARADISE_BAHAMAS64		L"roms/video/s3/bahamas64.bin"
-#define ROM_PHOENIX_VISION864		L"roms/video/s3/86c864p.bin"
-#define ROM_DIAMOND_STEALTH64_964	L"roms/video/s3/964_107h.rom"
-#define ROM_PHOENIX_TRIO32		L"roms/video/s3/86c732p.bin"
-#define ROM_NUMBER9_9FX			L"roms/video/s3/s3_764.bin"
-#define ROM_PHOENIX_TRIO64		L"roms/video/s3/86c764x1.bin"
-#define ROM_DIAMOND_STEALTH64_764	L"roms/video/s3/stealt64.bin"
+#define ROM_ORCHID_86C911		_S("roms/video/s3/BIOS.BIN")
+#define ROM_METHEUS_86C928		_S("roms/video/s3/928.vbi")
+#define ROM_V7MIRAGE_86C801		_S("roms/video/s3/v7mirage.vbi")
+#define ROM_PHOENIX_86C805		_S("roms/video/s3/805.vbi")
+#define ROM_PARADISE_BAHAMAS64		_S("roms/video/s3/bahamas64.bin")
+#define ROM_PHOENIX_VISION864		_S("roms/video/s3/86c864p.bin")
+#define ROM_DIAMOND_STEALTH64_964	_S("roms/video/s3/964_107h.rom")
+#define ROM_PHOENIX_TRIO32		_S("roms/video/s3/86c732p.bin")
+#define ROM_NUMBER9_9FX			_S("roms/video/s3/s3_764.bin")
+#define ROM_PHOENIX_TRIO64		_S("roms/video/s3/86c764x1.bin")
+#define ROM_DIAMOND_STEALTH64_764	_S("roms/video/s3/stealt64.bin")
 
 enum
 {

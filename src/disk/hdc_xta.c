@@ -110,7 +110,7 @@
 
 #define HDC_TIME	(50*TIMER_USEC)
 
-#define WD_BIOS_FILE	L"roms/hdd/xta/idexywd2.bin"
+#define WD_BIOS_FILE	_S("roms/hdd/xta/idexywd2.bin")
 
 
 enum {

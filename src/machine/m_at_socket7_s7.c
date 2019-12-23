@@ -67,8 +67,8 @@ machine_at_thor_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear_combined(L"roms/machines/thor/1006cn0_.bio",
-				    L"roms/machines/thor/1006cn0_.bi1", 0x20000, 128);
+    ret = bios_load_linear_combined(_S("roms/machines/thor/1006cn0_.bio"),
+				    _S("roms/machines/thor/1006cn0_.bi1"), 0x20000, 128);
 
     if (bios_only || !ret)
 	return ret;
@@ -85,7 +85,7 @@ machine_at_mrthor_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/mrthor/mr_atx.bio",
+    ret = bios_load_linear(_S("roms/machines/mrthor/mr_atx.bio"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -103,8 +103,8 @@ machine_at_pb640_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear_combined(L"roms/machines/pb640/1007CP0R.BIO",
-				    L"roms/machines/pb640/1007CP0R.BI1", 0x1d000, 128);
+    ret = bios_load_linear_combined(_S("roms/machines/pb640/1007CP0R.BIO"),
+				    _S("roms/machines/pb640/1007CP0R.BI1"), 0x1d000, 128);
 
     if (bios_only || !ret)
 	return ret;
@@ -145,7 +145,7 @@ machine_at_acerm3a_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/acerm3a/r01-b3.bin",
+    ret = bios_load_linear(_S("roms/machines/acerm3a/r01-b3.bin"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -178,7 +178,7 @@ machine_at_acerv35n_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/acerv35n/v35nd1s1.bin",
+    ret = bios_load_linear(_S("roms/machines/acerv35n/v35nd1s1.bin"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -211,7 +211,7 @@ machine_at_ap53_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/ap53/ap53r2c0.rom",
+    ret = bios_load_linear(_S("roms/machines/ap53/ap53r2c0.rom"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -242,7 +242,7 @@ machine_at_p55t2p4_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/p55t2p4/0207_j2.bin",
+    ret = bios_load_linear(_S("roms/machines/p55t2p4/0207_j2.bin"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -272,7 +272,7 @@ machine_at_p55t2s_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/p55t2s/s6y08t.rom",
+    ret = bios_load_linear(_S("roms/machines/p55t2s/s6y08t.rom"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -303,11 +303,11 @@ machine_at_tc430hx_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear_combined2(L"roms/machines/tc430hx/1007dh0_.bio",
-				     L"roms/machines/tc430hx/1007dh0_.bi1",
-				     L"roms/machines/tc430hx/1007dh0_.bi2",
-				     L"roms/machines/tc430hx/1007dh0_.bi3",
-				     L"roms/machines/tc430hx/1007dh0_.rcv",
+    ret = bios_load_linear_combined2(_S("roms/machines/tc430hx/1007dh0_.bio"),
+				     _S("roms/machines/tc430hx/1007dh0_.bi1"),
+				     _S("roms/machines/tc430hx/1007dh0_.bi2"),
+				     _S("roms/machines/tc430hx/1007dh0_.bi3"),
+				     _S("roms/machines/tc430hx/1007dh0_.rcv"),
 				     0x3a000, 128);
 
     if (bios_only || !ret)
@@ -339,7 +339,7 @@ machine_at_p55tvp4_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/p55tvp4/tv5i0204.awd",
+    ret = bios_load_linear(_S("roms/machines/p55tvp4/tv5i0204.awd"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -369,7 +369,7 @@ machine_at_i430vx_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/430vx/55xwuq0e.bin",
+    ret = bios_load_linear(_S("roms/machines/430vx/55xwuq0e.bin"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -399,7 +399,7 @@ machine_at_p55va_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/p55va/va021297.bin",
+    ret = bios_load_linear(_S("roms/machines/p55va/va021297.bin"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -429,7 +429,7 @@ machine_at_j656vxd_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/j656vxd/J656VXD.BIN",
+    ret = bios_load_linear(_S("roms/machines/j656vxd/J656VXD.BIN"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)

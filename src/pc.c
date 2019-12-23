@@ -99,7 +99,7 @@ int	settings_only = 0;			/* (O) show only the settings dialog */
 uint64_t	unique_id = 0;
 uint64_t	source_hwnd = 0;
 #endif
-wchar_t log_path[1024] = { L'\0'};		/* (O) full path of logfile */
+wchar_t log_path[1024] = { _S('\0')};		/* (O) full path of logfile */
 
 /* Configuration values. */
 int	window_w, window_h,			/* (C) window size and */
@@ -186,8 +186,8 @@ pclog_ex(const char *fmt, va_list ap)
     char temp[1024];
 
     if (stdlog == NULL) {
-	if (log_path[0] != L'\0') {
-		stdlog = plat_fopen(log_path, L"w");
+	if (log_path[0] != _S('\0')) {
+		stdlog = plat_fopen(log_path, _S("w"));
 		if (stdlog == NULL)
 			stdlog = stdout;
 	} else {
@@ -246,8 +246,8 @@ fatal(const char *fmt, ...)
     va_start(ap, fmt);
 
     if (stdlog == NULL) {
-	if (log_path[0] != L'\0') {
-		stdlog = plat_fopen(log_path, L"w");
+	if (log_path[0] != _S('\0')) {
+		stdlog = plat_fopen(log_path, _S("w"));
 		if (stdlog == NULL)
 			stdlog = stdout;
 	} else {
@@ -325,7 +325,7 @@ pc_init(int argc, wchar_t *argv[])
     /* Grab the executable's full path. */
     plat_get_exe_name(exe_path, sizeof(exe_path)-1);
     p = plat_get_filename(exe_path);
-    *p = L'\0';
+    *p = _S('\0');
 
     /*
      * Get the current working directory.
@@ -339,9 +339,9 @@ pc_init(int argc, wchar_t *argv[])
     memset(path, 0x00, sizeof(path));
 
     for (c=1; c<argc; c++) {
-	if (argv[c][0] != L'-') break;
+	if (argv[c][0] != _S('-')) break;
 
-	if (!wcscasecmp(argv[c], L"--help") || !wcscasecmp(argv[c], L"-?")) {
+	if (!wcscasecmp(argv[c], _S("--help")) || !wcscasecmp(argv[c], _S("-?"))) {
 usage:
 		printf("\nUsage: 86box [options] [cfg-file]\n\n");
 		printf("Valid options are:\n\n");
@@ -359,33 +359,33 @@ usage:
 #endif
 		printf("\nA config file can be specified. If none is, the default file will be used.\n");
 		return(0);
-	} else if (!wcscasecmp(argv[c], L"--dumpcfg") ||
-		   !wcscasecmp(argv[c], L"-C")) {
+	} else if (!wcscasecmp(argv[c], _S("--dumpcfg")) ||
+		   !wcscasecmp(argv[c], _S("-C"))) {
 		do_dump_config = 1;
 #ifdef _WIN32
-	} else if (!wcscasecmp(argv[c], L"--debug") ||
-		   !wcscasecmp(argv[c], L"-D")) {
+	} else if (!wcscasecmp(argv[c], _S("--debug")) ||
+		   !wcscasecmp(argv[c], _S("-D"))) {
 		force_debug = 1;
 #endif
-	} else if (!wcscasecmp(argv[c], L"--fullscreen") ||
-		   !wcscasecmp(argv[c], L"-F")) {
+	} else if (!wcscasecmp(argv[c], _S("--fullscreen")) ||
+		   !wcscasecmp(argv[c], _S("-F"))) {
 		start_in_fullscreen = 1;
-	} else if (!wcscasecmp(argv[c], L"--logfile") ||
-		   !wcscasecmp(argv[c], L"-L")) {
+	} else if (!wcscasecmp(argv[c], _S("--logfile")) ||
+		   !wcscasecmp(argv[c], _S("-L"))) {
 		if ((c+1) == argc) goto usage;
 
 		wcscpy(log_path, argv[++c]);
-	} else if (!wcscasecmp(argv[c], L"--vmpath") ||
-		   !wcscasecmp(argv[c], L"-P")) {
+	} else if (!wcscasecmp(argv[c], _S("--vmpath")) ||
+		   !wcscasecmp(argv[c], _S("-P"))) {
 		if ((c+1) == argc) goto usage;
 
 		wcscpy(path, argv[++c]);
-	} else if (!wcscasecmp(argv[c], L"--settings") ||
-		   !wcscasecmp(argv[c], L"-S")) {
+	} else if (!wcscasecmp(argv[c], _S("--settings")) ||
+		   !wcscasecmp(argv[c], _S("-S"))) {
 		settings_only = 1;
 #ifdef _WIN32
-	} else if (!wcscasecmp(argv[c], L"--hwnd") ||
-		   !wcscasecmp(argv[c], L"-H")) {
+	} else if (!wcscasecmp(argv[c], _S("--hwnd")) ||
+		   !wcscasecmp(argv[c], _S("-H"))) {
 
 		if ((c+1) == argc) goto usage;
 
@@ -394,7 +394,7 @@ usage:
 		shwnd = (uint32_t *) &source_hwnd;
 		sscanf(temp, "%08X%08X,%08X%08X", uid + 1, uid, shwnd + 1, shwnd);
 #endif
-	} else if (!wcscasecmp(argv[c], L"--test")) {
+	} else if (!wcscasecmp(argv[c], _S("--test"))) {
 		/* some (undocumented) test function here.. */
 
 		/* .. and then exit. */
@@ -416,7 +416,7 @@ usage:
      * make sure that if that was a relative path, we
      * make it absolute.
      */
-    if (path[0] != L'\0') {
+    if (path[0] != _S('\0')) {
 	if (! plat_path_abs(path)) {
 		/*
 		 * This looks like a relative path.
@@ -462,7 +462,7 @@ usage:
 	 * path component. Separate the two, and
 	 * add the path component to the cfg path.
 	 */
-	*(p-1) = L'\0';
+	*(p-1) = _S('\0');
 
 	/*
 	 * If this is an absolute path, keep it, as
@@ -961,7 +961,7 @@ pc_thread(void *param)
 			mbstowcs(wcpu, machines[machine].cpu[cpu_manufacturer].cpus[cpu_effective].name,
 				 strlen(machines[machine].cpu[cpu_manufacturer].cpus[cpu_effective].name)+1);
 			swprintf(temp, sizeof_w(temp),
-				 L"%ls v%ls - %i%% - %ls - %ls - %ls",
+				 _S("%ls v%ls - %i%% - %ls - %ls - %ls"),
 				 EMU_NAME_W,EMU_VERSION_W,fps,wmachine,wcpu,
 				 (!mouse_capture) ? plat_get_string(IDS_2077)
 				  : (mouse_get_buttons() > 2) ? plat_get_string(IDS_2078) : plat_get_string(IDS_2079));

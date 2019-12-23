@@ -47,7 +47,7 @@ machine_at_i440fx_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/440fx/ntmaw501.bin",
+    ret = bios_load_linear(_S("roms/machines/440fx/ntmaw501.bin"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)
@@ -78,7 +78,7 @@ machine_at_s1668_init(const machine_t *model)
 {
     int ret;
 
-    ret = bios_load_linear(L"roms/machines/tpatx/s1668p.rom",
+    ret = bios_load_linear(_S("roms/machines/tpatx/s1668p.rom"),
 			   0x000e0000, 131072, 0);
 
     if (bios_only || !ret)

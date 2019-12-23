@@ -79,7 +79,7 @@ rom_getfile(wchar_t *fn, wchar_t *s, int size)
     plat_put_backslash(s);
     wcscat(s, fn);
 
-    f = plat_fopen(s, L"rb");
+    f = plat_fopen(s, _S("rb"));
     if (f != NULL) {
 	(void)fclose(f);
 	return(1);
@@ -94,7 +94,7 @@ rom_present(wchar_t *fn)
 {
     FILE *f;
 
-    f = rom_fopen(fn, L"rb");
+    f = rom_fopen(fn, _S("rb"));
     if (f != NULL) {
 	(void)fclose(f);
 	return(1);
@@ -162,7 +162,7 @@ rom_readl(uint32_t addr, void *priv)
 int
 rom_load_linear(wchar_t *fn, uint32_t addr, int sz, int off, uint8_t *ptr)
 {
-    FILE *f = rom_fopen(fn, L"rb");
+    FILE *f = rom_fopen(fn, _S("rb"));
         
     if (f == NULL) {
 	rom_log("ROM: image '%ls' not found\n", fn);
@@ -194,7 +194,7 @@ rom_load_linear(wchar_t *fn, uint32_t addr, int sz, int off, uint8_t *ptr)
 int
 rom_load_linear_inverted(wchar_t *fn, uint32_t addr, int sz, int off, uint8_t *ptr)
 {
-    FILE *f = rom_fopen(fn, L"rb");
+    FILE *f = rom_fopen(fn, _S("rb"));
         
     if (f == NULL) {
 	rom_log("ROM: image '%ls' not found\n", fn);
@@ -233,8 +233,8 @@ rom_load_linear_inverted(wchar_t *fn, uint32_t addr, int sz, int off, uint8_t *p
 int
 rom_load_interleaved(wchar_t *fnl, wchar_t *fnh, uint32_t addr, int sz, int off, uint8_t *ptr)
 {
-    FILE *fl = rom_fopen(fnl, L"rb");
-    FILE *fh = rom_fopen(fnh, L"rb");
+    FILE *fl = rom_fopen(fnl, _S("rb"));
+    FILE *fh = rom_fopen(fnh, _S("rb"));
     int c;
 
     if (fl == NULL || fh == NULL) {

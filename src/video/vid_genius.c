@@ -34,7 +34,7 @@
 #include "vid_genius.h"
 
 
-#define BIOS_ROM_PATH	L"roms/video/genius/8x12.bin"
+#define BIOS_ROM_PATH	_S("roms/video/genius/8x12.bin")
 
 
 #define GENIUS_XSIZE 728

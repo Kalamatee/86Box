@@ -740,7 +740,7 @@ int machine_at_t3100e_init(const machine_t *model)
 {
 	int ret;
 
-	ret = bios_load_linear(L"roms/machines/t3100e/t3100e.rom",
+	ret = bios_load_linear(_S("roms/machines/t3100e/t3100e.rom"),
 			       0x000f0000, 65536, 0);
 
 	if (bios_only || !ret)

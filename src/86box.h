@@ -19,6 +19,26 @@
 #ifndef EMU_86BOX_H
 # define EMU_86BOX_H
 
+#if __WCHAR_MAX__ > (0xFF)
+#define _S(str)	L ## str
+#else
+#define _S(str)	str
+#  define wstring string
+#  ifdef __cplusplus
+static inline wchar_t *wcscpy( wchar_t *dest, const wchar_t *src )
+{
+    return (wchar_t *)strcpy((char *)dest, (char *)src );
+}
+#  else
+#    define wcscpy(target,source) strcpy((char *)(target), (const char *)(source))
+#  endif
+
+#  define swprintf(target,count,source,...) snprintf((char *)(target), (count), (const char *)(source), ## __VA_ARGS__)
+#  define wcscasecmp(source1,source2) strcasecmp((const char *)(source1), (const char *)(source2))
+#  define wcscat(target,source) strcat((char *)(target), (const char *)(source))
+#  define wcslen(source) strlen((const char *)(source))
+#  define wcsncpy(target,source,count) strncpy((char *)(target), (const char *)(source), (count))
+#endif
 
 /* Configuration values. */
 #define SERIAL_MAX	2
@@ -28,19 +48,19 @@
 
 /* Version info. */
 #define EMU_NAME	"86Box"
-#define EMU_NAME_W	L"86Box"
+#define EMU_NAME_W	_S("86Box")
 #ifdef RELEASE_BUILD
 #define EMU_VERSION	"2.07"
-#define EMU_VERSION_W	L"2.07"
+#define EMU_VERSION_W	_S("2.07")
 #else
 #define EMU_VERSION	"2.10"
-#define EMU_VERSION_W	L"2.10"
+#define EMU_VERSION_W	_S("2.10")
 #endif
 
 /* Filename and pathname info. */
-#define CONFIG_FILE	L"86box.cfg"
-#define NVR_PATH        L"nvr"
-#define SCREENSHOT_PATH L"screenshots"
+#define CONFIG_FILE	_S("86box.cfg")
+#define NVR_PATH        _S("nvr")
+#define SCREENSHOT_PATH _S("screenshots")
 
 
 #if defined(ENABLE_BUSLOGIC_LOG) || \

@@ -18,6 +18,7 @@
  */
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <wchar.h>
 #include "../86box.h"
@@ -30,9 +31,9 @@
 #include "vid_oak_oti.h"
 #include "vid_svga.h"
 
-#define BIOS_037C_PATH			L"roms/video/oti/bios.bin"
-#define BIOS_067_AMA932J_PATH		L"roms/machines/ama932j/oti067.bin"
-#define BIOS_077_PATH			L"roms/video/oti/oti077.vbi"
+#define BIOS_037C_PATH			_S("roms/video/oti/bios.bin")
+#define BIOS_067_AMA932J_PATH		_S("roms/machines/ama932j/oti067.bin")
+#define BIOS_077_PATH			_S("roms/video/oti/oti077.vbi")
 
 
 enum {

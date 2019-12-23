@@ -66,10 +66,10 @@ static int dither[4][4] =
 #define FIFO_TYPE 0xff000000
 #define FIFO_ADDR 0x00ffffff
 
-#define ROM_DIAMOND_STEALTH3D_2000	L"roms/video/s3virge/s3virge.bin"
-#define ROM_DIAMOND_STEALTH3D_3000	L"roms/video/s3virge/diamondstealth3000.vbi"
-#define ROM_VIRGE_DX			L"roms/video/s3virge/86c375_1.bin"
-#define ROM_VIRGE_DX_VBE20		L"roms/video/s3virge/86c375_4.bin"
+#define ROM_DIAMOND_STEALTH3D_2000	_S("roms/video/s3virge/s3virge.bin")
+#define ROM_DIAMOND_STEALTH3D_3000	_S("roms/video/s3virge/diamondstealth3000.vbi")
+#define ROM_VIRGE_DX			_S("roms/video/s3virge/86c375_1.bin")
+#define ROM_VIRGE_DX_VBE20		_S("roms/video/s3virge/86c375_4.bin")
 
 enum
 {

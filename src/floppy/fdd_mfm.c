@@ -407,7 +407,7 @@ mfm_load(int drive, wchar_t *fn)
     dev = (mfm_t *)malloc(sizeof(mfm_t));
     memset(dev, 0x00, sizeof(mfm_t));
 
-    dev->f = plat_fopen(fn, L"rb");
+    dev->f = plat_fopen(fn, _S("rb"));
     if (dev->f == NULL) {
 	free(dev);
 	memset(floppyfns[drive], 0, sizeof(floppyfns[drive]));

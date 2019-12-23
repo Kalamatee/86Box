@@ -429,7 +429,7 @@ static void sb_get_buffer_emu8k(int32_t *buffer, int len, void *p)
                         #ifdef SB_DSP_RECORD_DEBUG
                                 if (c_record > 0xFFFF && !buf_written)
                                 {
-                                        if (!soundfsb) soundfsb=plat_fopen(L"sound_sb.pcm",L"wb");
+                                        if (!soundfsb) soundfsb=plat_fopen(_S("sound_sb.pcm"),_S("wb"));
                                         fwrite(sb->dsp.record_buffer,2,0x10000,soundfsb);
                                         old_dsp_rec_pos = dsp_rec_pos;
                                         buf_written=1;
@@ -452,7 +452,7 @@ static void sb_get_buffer_emu8k(int32_t *buffer, int len, void *p)
                         #ifdef SB_DSP_RECORD_DEBUG
                                 if (c_record != last_crecord)
                                 {
-                                        if (!soundfsbin) soundfsbin=plat_fopen(L"sound_sb_in.pcm",L"wb");
+                                        if (!soundfsbin) soundfsbin=plat_fopen(_S("sound_sb_in.pcm"),_S("wb"));
                                         fwrite(&sb->dsp.record_buffer[c_record&0xFFFF],2,2,soundfsbin);
                                         last_crecord=c_record;
                                 }
@@ -1266,7 +1266,7 @@ void *sb_16_init()
 
 int sb_awe32_available()
 {
-        return rom_present(L"roms/sound/awe32.raw");
+        return rom_present(_S("roms/sound/awe32.raw"));
 }
 
 void *sb_awe32_init()

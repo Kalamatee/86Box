@@ -51,6 +51,15 @@
 extern "C" {
 #endif
 
+#if defined(__AROS__)
+#  define fgetws          fgets
+#  define fwprintf        fprintf
+#  define fopen64        fopen
+#  define fseeko64       fseeko
+#  define ftello64       ftello
+#  define off64_t        off_t
+#endif
+
 /* Global variables residing in the platform module. */
 GLOBAL int	dopause,			/* system is paused */
 		doresize,			/* screen resize requested */

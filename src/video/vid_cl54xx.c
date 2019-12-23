@@ -37,21 +37,21 @@
 #include "vid_cl54xx.h"
 
 #if defined(DEV_BRANCH) && defined(USE_CL5422)
-#define BIOS_GD5420_PATH		L"roms/video/cirruslogic/5420.vbi"
-#define BIOS_GD5422_PATH		L"roms/video/cirruslogic/cl5422.bin"
+#define BIOS_GD5420_PATH		_S("roms/video/cirruslogic/5420.vbi")
+#define BIOS_GD5422_PATH		_S("roms/video/cirruslogic/cl5422.bin")
 #endif
-#define BIOS_GD5426_PATH		L"roms/video/cirruslogic/Diamond SpeedStar PRO VLB v3.04.bin"
-#define BIOS_GD5428_ISA_PATH		L"roms/video/cirruslogic/5428.bin"
-#define BIOS_GD5428_PATH		L"roms/video/cirruslogic/vlbusjapan.BIN"
-#define BIOS_GD5429_PATH		L"roms/video/cirruslogic/5429.vbi"
-#define BIOS_GD5430_VLB_PATH		L"roms/video/cirruslogic/diamondvlbus.bin"
-#define BIOS_GD5430_PCI_PATH		L"roms/video/cirruslogic/pci.bin"
-#define BIOS_GD5434_PATH		L"roms/video/cirruslogic/gd5434.bin"
-#define BIOS_GD5436_PATH		L"roms/video/cirruslogic/5436.vbi"
-#define BIOS_GD5440_PATH		L"roms/video/cirruslogic/BIOS.BIN"
-#define BIOS_GD5446_PATH		L"roms/video/cirruslogic/5446BV.VBI"
-#define BIOS_GD5446_STB_PATH		L"roms/video/cirruslogic/stb nitro64v.BIN"
-#define BIOS_GD5480_PATH		L"roms/video/cirruslogic/clgd5480.rom"
+#define BIOS_GD5426_PATH		_S("roms/video/cirruslogic/Diamond SpeedStar PRO VLB v3.04.bin")
+#define BIOS_GD5428_ISA_PATH		_S("roms/video/cirruslogic/5428.bin")
+#define BIOS_GD5428_PATH		_S("roms/video/cirruslogic/vlbusjapan.BIN")
+#define BIOS_GD5429_PATH		_S("roms/video/cirruslogic/5429.vbi")
+#define BIOS_GD5430_VLB_PATH		_S("roms/video/cirruslogic/diamondvlbus.bin")
+#define BIOS_GD5430_PCI_PATH		_S("roms/video/cirruslogic/pci.bin")
+#define BIOS_GD5434_PATH		_S("roms/video/cirruslogic/gd5434.bin")
+#define BIOS_GD5436_PATH		_S("roms/video/cirruslogic/5436.vbi")
+#define BIOS_GD5440_PATH		_S("roms/video/cirruslogic/BIOS.BIN")
+#define BIOS_GD5446_PATH		_S("roms/video/cirruslogic/5446BV.VBI")
+#define BIOS_GD5446_STB_PATH		_S("roms/video/cirruslogic/stb nitro64v.BIN")
+#define BIOS_GD5480_PATH		_S("roms/video/cirruslogic/clgd5480.rom")
 
 #define CIRRUS_ID_CLGD5402	  	0x89
 #define CIRRUS_ID_CLGD5420	  	0x8a

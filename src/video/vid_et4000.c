@@ -56,9 +56,9 @@
 #include "vid_et4000.h"
 
 
-#define BIOS_ROM_PATH		L"roms/video/et4000/et4000.bin"
-#define KOREAN_BIOS_ROM_PATH 	L"roms/video/et4000/tgkorvga.bin"
-#define KOREAN_FONT_ROM_PATH 	L"roms/video/et4000/tg_ksc5601.rom"
+#define BIOS_ROM_PATH		_S("roms/video/et4000/et4000.bin")
+#define KOREAN_BIOS_ROM_PATH 	_S("roms/video/et4000/tgkorvga.bin")
+#define KOREAN_FONT_ROM_PATH 	_S("roms/video/et4000/tg_ksc5601.rom")
 
 
 typedef struct {

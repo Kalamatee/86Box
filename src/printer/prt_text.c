@@ -150,14 +150,14 @@ dump_page(prnt_t *dev)
 
     /* Create the full path for this file. */
     memset(path, 0x00, sizeof(path));
-    plat_append_filename(path, usr_path, L"printer");
+    plat_append_filename(path, usr_path, _S("printer"));
     if (! plat_dir_check(path))
         plat_dir_create(path);
     plat_path_slash(path);
     wcscat(path, dev->filename);
 
     /* Create the file. */
-    fp = plat_fopen(path, L"a");
+    fp = plat_fopen(path, _S("a"));
     if (fp == NULL) {
 	//ERRLOG("PRNT: unable to create print page '%ls'\n", path);
 	return;
@@ -250,7 +250,7 @@ reset_printer(prnt_t *dev)
 	dev->page->dirty = 0;
 
     /* Create a file for this page. */
-    plat_tempfile(dev->filename, NULL, L".txt");
+    plat_tempfile(dev->filename, NULL, _S(".txt"));
 
     timer_disable(&dev->pulse_timer);
     timer_disable(&dev->timeout_timer);

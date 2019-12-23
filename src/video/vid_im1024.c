@@ -67,7 +67,7 @@
 #include "vid_im1024.h"
 
 
-#define BIOS_ROM_PATH	L"roms/video/im1024/im1024font.bin"
+#define BIOS_ROM_PATH	_S("roms/video/im1024/im1024font.bin")
 
 
 typedef struct {

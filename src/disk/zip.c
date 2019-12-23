@@ -489,10 +489,10 @@ zip_load(zip_t *dev, wchar_t *fn)
 {
     int size = 0;
 
-    dev->drv->f = plat_fopen(fn, dev->drv->read_only ? L"rb" : L"rb+");
+    dev->drv->f = plat_fopen(fn, dev->drv->read_only ? _S("rb") : _S("rb+"));
     if (!dev->drv->f) {
 	if (!dev->drv->read_only) {
-		dev->drv->f = plat_fopen(fn, L"rb");
+		dev->drv->f = plat_fopen(fn, _S("rb"));
 		if (dev->drv->f)
 			dev->drv->read_only = 1;
 		else

@@ -47,7 +47,7 @@
 #include "scsi_device.h"
 #include "scsi_ncr53c8xx.h"
 
-#define NCR53C8XX_ROM	L"roms/scsi/ncr53c8xx/NCR307.BIN"
+#define NCR53C8XX_ROM	_S("roms/scsi/ncr53c8xx/NCR307.BIN")
 
 #define CHIP_810	  0x01
 #define CHIP_825	  0x03
@@ -1430,9 +1430,9 @@ ncr53c8xx_eeprom(ncr53c8xx_t *dev, int save)
     FILE *f;
 
     if (save)
-	f = nvr_fopen(dev->nvr_path, L"wb");
+	f = nvr_fopen(dev->nvr_path, _S("wb"));
     else
-	f = nvr_fopen(dev->nvr_path, L"rb");
+	f = nvr_fopen(dev->nvr_path, _S("rb"));
     if (f)
     {
 	if (save) {
@@ -2637,10 +2637,10 @@ ncr53c8xx_init(const device_t *info)
 
         if (dev->chip == CHIP_875) {
 		dev->chip_rev = 0x04;
-		dev->nvr_path = L"ncr53c875.nvr";
+		dev->nvr_path = _S("ncr53c875.nvr");
 	} else {
 		dev->chip_rev = 0x26;
-		dev->nvr_path = L"ncr53c825a.nvr";
+		dev->nvr_path = _S("ncr53c825a.nvr");
 	}
     	ncr53c8xx_pci_bar[2].addr_regs[0] = 0;
     	ncr53c8xx_pci_bar[3].addr = 0xffff0000;
@@ -2657,7 +2657,7 @@ ncr53c8xx_init(const device_t *info)
 	if (dev->has_bios)
 		rom_init(&dev->bios, NCR53C8XX_ROM, 0xc8000, 0x4000, 0x3fff, 0, MEM_MAPPING_EXTERNAL);
 
-	dev->nvr_path = L"ncr53c810.nvr";
+	dev->nvr_path = _S("ncr53c810.nvr");
     }
 
 #ifdef USE_NVRAM

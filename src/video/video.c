@@ -344,7 +344,7 @@ video_take_screenshot(const wchar_t *fn, int startx, int starty, int w, int h)
     uint32_t temp = 0x00000000;
 
     /* create file */
-    fp = plat_fopen((wchar_t *) fn, (wchar_t *) L"wb");
+    fp = plat_fopen((wchar_t *) fn, (wchar_t *) _S("wb"));
     if (!fp) {
 	video_log("[video_take_screenshot] File %ls could not be opened for writing", fn);
 	return;
@@ -419,9 +419,9 @@ video_screenshot(int x, int y, int w, int h)
     if (! plat_dir_check(path))
 	plat_dir_create(path);
 
-    wcscat(path, L"\\");
+    wcscat(path, _S("\\"));
 
-    plat_tempfile(fn, NULL, L".png");
+    plat_tempfile(fn, NULL, _S(".png"));
     wcscat(path, fn);
 
     video_log("taking screenshot to: %S\n", path);
@@ -912,7 +912,7 @@ loadfont(wchar_t *s, int format)
     FILE *f;
     int c,d;
 
-    f = rom_fopen(s, L"rb");
+    f = rom_fopen(s, _S("rb"));
     if (f == NULL)
 	return;
 

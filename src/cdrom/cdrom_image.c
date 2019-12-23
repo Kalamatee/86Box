@@ -269,7 +269,7 @@ cdrom_image_open(cdrom_t *dev, const wchar_t *fn)
 	return image_open_abort(dev);
 
     /* All good, reset state. */
-    if (! wcscasecmp(plat_get_extension((wchar_t *) fn), L"ISO"))
+    if (! wcscasecmp(plat_get_extension((wchar_t *) fn), _S("ISO")))
 	dev->cd_status = CD_STATUS_DATA_ONLY;
     else
 	dev->cd_status = CD_STATUS_STOPPED;
