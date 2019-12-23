@@ -204,10 +204,12 @@ network_init(void)
     strcpy(network_devs[0].description, "None");
     network_ndev = 1;
 
+#if !defined(NO_PCAP)
     /* Initialize the Pcap system module, if present. */
     i = net_pcap_prepare(&network_devs[network_ndev]);
     if (i > 0)
 	network_ndev += i;
+#endif
 }
 
 
@@ -236,13 +238,18 @@ network_attach(void *dev, uint8_t *mac, NETRXCB rx)
 
     /* Activate the platform module. */
     switch(network_type) {
+#if !defined(NO_PCAP)
 	case NET_TYPE_PCAP:
 		(void)net_pcap_reset(&net_cards[network_card], network_mac);
 		break;
-
+#endif
+#if !defined(NO_SLIRP)
 	case NET_TYPE_SLIRP:
 		(void)net_slirp_reset(&net_cards[network_card], network_mac);
 		break;
+#endif
+        default:
+            break;
     }
 }
 
@@ -254,12 +261,14 @@ network_close(void)
     /* If already closed, do nothing. */
     if (network_mutex == NULL) return;
 
+#if !defined(NO_PCAP)
     /* Force-close the PCAP module. */
     net_pcap_close();
-
+#endif
+#if !defined(NO_SLIRP)
     /* Force-close the SLIRP module. */
     net_slirp_close();
- 
+ #endif
     /* Close the network events. */
     if (poll_data.wake_poll_thread != NULL) {
 	thread_destroy_event(poll_data.wake_poll_thread);
@@ -311,13 +320,18 @@ network_reset(void)
 
     /* Initialize the platform module. */
     switch(network_type) {
+#if !defined(NO_PCAP)
 	case NET_TYPE_PCAP:
 		i = net_pcap_init();
 		break;
-
+#endif
+#if !defined(NO_SLIRP)
 	case NET_TYPE_SLIRP:
 		i = net_slirp_init();
 		break;
+#endif
+        default:
+            break;
     }
 
     if (i < 0) {
@@ -354,13 +368,18 @@ network_tx(uint8_t *bufp, int len)
     ui_sb_update_icon(SB_NETWORK, 1);
 
     switch(network_type) {
+#if !defined(NO_PCAP)
 	case NET_TYPE_PCAP:
 		net_pcap_in(bufp, len);
 		break;
-
+#endif
+#if !defined(NO_SLIRP)
 	case NET_TYPE_SLIRP:
 		net_slirp_in(bufp, len);
 		break;
+#endif
+        default:
+            break;
     }
 
     ui_sb_update_icon(SB_NETWORK, 0);
