@@ -1,0 +1,654 @@
+# $Id$
+#
+# 86Box		A hypervisor and IBM PC system emulator that specializes in
+#		running old operating systems and software designed for IBM
+#		PC systems and compatibles from 1981 through fairly recent
+#		system designs based on the PCI bus.
+
+include $(SRCDIR)/config/aros.cfg
+
+#MM- local-86box : local-86box-$(AROS_TARGET_CPU)
+#MM- local-86box-i386 : local-86box-binary
+#MM- local-86box-x86_64 : local-86box-binary
+#MM local-86box-binary : contrib-sdl contrib-openal
+
+#MM- local-86box-quick : local-86box-$(AROS_TARGET_CPU)-quick
+#MM- local-86box-i386-quick : local-86box-binary-quick
+#MM- local-86box-x86_64-quick : local-86box-binary-quick
+
+PROG		:= 86Box
+EXEDIR          := $(AROS_CONTRIB)/Emu/86Box
+
+CPU_DIR		:= cpu
+#CPU_DIR		:= cpu_new
+
+DEBUG		:= y
+DEV_BUILD	:= y
+
+# Various compile-time options.
+ifndef STUFF
+STUFF		:=
+endif
+
+# Add feature selections here.
+ifndef EXTRAS
+EXTRAS		:=
+endif
+
+ifndef DEV_BUILD
+DEV_BUILD	:= n
+endif
+ifndef FLTO
+FLTO		:= full
+endif
+
+ifeq ($(DEV_BUILD), y)
+ ifndef DEBUG
+  DEBUG		:= y
+ endif
+ ifndef DEV_BRANCH
+  DEV_BRANCH	:= y
+ endif
+ ifndef AMD_K
+  AMD_K		:= y
+ endif
+ ifndef CL5422
+  CL5422	:= y
+ endif
+ ifndef CRASHDUMP
+  CRASHDUMP	:= y
+ endif
+ ifndef D2D
+  D2D		:= y
+ endif
+ ifndef I686
+  I686		:= y
+ endif
+ ifndef LASERXT
+  LASERXT	:= y
+ endif
+ ifndef MR495
+  MR495		:= y
+ endif
+ ifndef MRTHOR
+  MRTHOR	:= y
+ endif
+ ifndef PAS16
+  PAS16		:= n
+ endif
+ ifndef PORTABLE3
+  PORTABLE3	:= y
+ endif
+ ifndef PS1M2133
+  PS1M2133	:= y
+ endif
+ ifndef PS2M70T4
+  PS2M70T4	:= y
+ endif
+ ifndef TI
+  TI		:= y
+ endif
+ ifndef TC430HX
+  TC430HX	:= y
+ endif
+ ifndef VECTRA54
+  VECTRA54	:= y
+ endif
+ ifndef MICRONICS386
+  MICRONICS386	:= y
+ endif
+ ifndef VGAWONDER
+  VGAWONDER	:= y
+ endif
+ ifndef VNC
+  VNC		:= y
+ endif
+ ifndef XL24
+  XL24		:= y
+ endif
+else
+ ifndef DEBUG
+  DEBUG		:= n
+ endif
+ ifndef DEV_BRANCH
+  DEV_BRANCH	:= n
+ endif
+ ifndef AMD_K
+  AMD_K		:= n
+ endif
+ ifndef CL5422
+  CL5422	:= n
+ endif
+ ifndef CRASHDUMP
+  CRASHDUMP	:= n
+ endif
+ ifndef D2D
+  D2D		:= n
+ endif
+ ifndef I686
+  I686		:= n
+ endif
+ ifndef LASERXT
+  LASERXT	:= n
+ endif
+ ifndef MR495
+  MR495		:= n
+ endif
+ ifndef MRTHOR
+  MRTHOR	:= n
+ endif
+ ifndef PAS16
+  PAS16		:= n
+ endif
+ ifndef PORTABLE3
+  PORTABLE3	:= n
+ endif
+ ifndef PS1M2133
+  PS1M2133	:= n
+ endif
+ ifndef PS2M70T4
+  PS2M70T4	:= n
+ endif
+ ifndef TI
+  TI		:= n
+ endif
+ ifndef TC430HX
+  TC430HX	:= n
+ endif
+ ifndef VECTRA54
+  VECTRA54	:= n
+ endif
+ ifndef MICRONICS386
+  MICRONICS386	:= n
+ endif
+ ifndef VGAWONDER
+  VGAWONDER	:= n
+ endif
+ ifndef VNC
+  VNC		:= n
+ endif
+ ifndef XL24
+  XL24		:= n
+ endif
+endif
+
+ifndef DISCORD
+ DISCORD	:= n
+endif
+ifndef USB
+ USB		:= n
+endif
+ifndef OPENAL
+ OPENAL		:= y
+endif
+ifndef DYNAREC
+ DYNAREC	:= y
+endif
+
+# ## END OF OPTIONS
+
+ifeq ($(OPENAL), y)
+OPTS		+= -DUSE_OPENAL
+endif
+
+ifeq ($(DISCORD), y)
+OPTS		+= -DUSE_DISCORD
+RFLAGS		+= -DUSE_DISCORD
+DISCORDFILES	:= aros/aros_discord
+endif
+
+# Options for the DEV branch.
+ifeq ($(DEV_BRANCH), y)
+OPTS		+= -DDEV_BRANCH
+DEVBRFILES	:=
+
+ifeq ($(AMD_K), y)
+OPTS		+= -DUSE_AMD_K
+endif
+
+ifeq ($(CL5422), y)
+OPTS		+= -DUSE_CL5422
+endif
+
+ifeq ($(I686), y)
+OPTS		+= -DUSE_I686
+DEVBRFILES	+= machine/m_at_socket8
+endif
+
+ifeq ($(LASERXT), y)
+OPTS		+= -DUSE_LASERXT
+DEVBRFILES	+= machine/m_xt_laserxt
+endif
+
+ifeq ($(MR495), y)
+OPTS		+= -DUSE_MR495
+endif
+
+ifeq ($(MRTHOR), y)
+OPTS		+= -DUSE_MRTHOR
+endif
+
+ifeq ($(PAS16), y)
+OPTS += -DUSE_PAS16
+DEVBRFILES += sound/snd_pas16
+endif
+
+ifeq ($(PORTABLE3), y)
+OPTS		+= -DUSE_PORTABLE3
+endif
+
+ifeq ($(PS1M2133), y)
+OPTS		+= -DUSE_PS1M2133
+endif
+
+ifeq ($(PS2M70T4), y)
+OPTS		+= -DUSE_PS2M70T4
+endif
+
+ifeq ($(TI), y)
+OPTS		+= -DUSE_TI
+endif
+
+ifeq ($(TC430HX), y)
+OPTS		+= -DUSE_TC430HX
+endif
+
+ifeq ($(VECTRA54), y)
+OPTS		+= -DUSE_VECTRA54
+endif
+
+ifeq ($(MICRONICS386), y)
+OPTS		+= -DUSE_MICRONICS386
+endif
+
+ifeq ($(VGAWONDER), y)
+OPTS		+= -DUSE_VGAWONDER
+endif
+
+ifeq ($(XL24), y)
+OPTS		+= -DUSE_XL24
+endif
+
+endif
+
+# Optional modules.
+ifeq ($(DYNAREC), y)
+#ifeq ($(AROS_TARGET_CPU),x86_64)
+PLATCG		:= $(CPU_DIR)/codegen_x86-64
+#else
+#PLATCG		:= $(CPU_DIR)/codegen_x86
+#endif
+
+OPTS		+= -DUSE_DYNAREC
+RFLAGS		+= -DUSE_DYNAREC
+DYNARECFILES := \
+	$(CPU_DIR)/386_dynarec_ops \
+	$(CPU_DIR)/codegen \
+	$(CPU_DIR)/codegen_ops \
+	$(CPU_DIR)/codegen_timing_common \
+	$(CPU_DIR)/codegen_timing_486 \
+	$(CPU_DIR)/codegen_timing_686 \
+	$(CPU_DIR)/codegen_timing_pentium \
+	$(CPU_DIR)/codegen_timing_winchip $(PLATCG)
+endif
+
+# Options for works-in-progress.
+ifndef SERIAL
+SERIAL		:= serial
+endif
+
+ifeq ($(RELEASE), y)
+OPTS		+= -DRELEASE_BUILD
+RFLAGS		+= -DRELEASE_BUILD
+endif
+
+ifeq ($(DEBUG), y)
+ OPTS		+= -ggdb -DDEBUG
+endif
+
+ifeq ($(VRAMDUMP), y)
+OPTS		+= -DENABLE_VRAM_DUMP
+RFLAGS		+= -DENABLE_VRAM_DUMP
+endif
+
+#########################################################################
+#		Create the (final) list of objects to build.		#
+#########################################################################
+MAINFILES := \
+	pc \
+	config \
+	random \
+	timer \
+	io \
+	apm \
+	dma \
+	nmi \
+	pic \
+	pit \
+	port_92 \
+	ppi \
+	pci \
+	mca \
+	mcr \
+	mem \
+	rom \
+	device \
+	nvr \
+	nvr_at \
+	nvr_ps2
+
+INTELFILES := \
+	intel_flash \
+	intel_sio \
+	intel_piix
+
+CPUFILES := \
+	$(CPU_DIR)/cpu \
+	$(CPU_DIR)/cpu_table \
+	$(CPU_DIR)/808x \
+	$(CPU_DIR)/386 \
+	$(CPU_DIR)/386_dynarec \
+	$(CPU_DIR)/x86seg \
+	$(CPU_DIR)/x87 \
+	$(DYNARECFILES)
+
+CHIPSETFILES := \
+	chipset/acc2168 \
+	chipset/acer_m3a \
+	chipset/ali1429 \
+	chipset/headland \
+	chipset/intel_4x0 \
+	chipset/neat \
+	chipset/opti495 \
+	chipset/scat \
+	chipset/sis_85c471 \
+	chipset/sis_85c496 \
+	chipset/wd76c10
+
+MCHFILES := \
+	machine \
+	machine_table \
+	machine/m_xt \
+	machine/m_xt_compaq \
+	machine/m_xt_t1000 \
+	machine/m_xt_t1000_vid \
+	machine/m_xt_xi8088 \
+	machine/m_xt_zenith \
+	machine/m_pcjr \
+	machine/m_amstrad \
+	machine/m_europc \
+	machine/m_olivetti_m24 \
+	machine/m_tandy \
+	machine/m_at \
+	machine/m_at_commodore \
+	machine/m_at_t3100e \
+	machine/m_at_t3100e_vid \
+	machine/m_ps1 \
+	machine/m_ps1_hdc \
+	machine/m_ps2_isa \
+	machine/m_ps2_mca \
+	machine/m_at_compaq \
+	machine/m_at_286_386sx \
+	machine/m_at_386dx_486 \
+	machine/m_at_socket4_5 \
+	machine/m_at_socket7_s7
+
+DEVFILES := \
+	bugger \
+	ibm_5161 \
+	isamem \
+	isartc \
+	lpt \
+	$(SERIAL) \
+        sio_acc3221 \
+	sio_fdc37c66x \
+	sio_fdc37c669 \
+	sio_fdc37c93x \
+	sio_pc87306 \
+	sio_w83877f \
+	sio_um8669f \
+	keyboard \
+	keyboard_xt \
+	keyboard_at \
+	game/gameport \
+	game/joystick_standard \
+	game/joystick_ch_flightstick_pro \
+	game/joystick_sw_pad \
+	game/joystick_tm_fcs \
+	mouse \
+	mouse_bus \
+	mouse_serial \
+	mouse_ps2
+
+FDDFILES := \
+	floppy/fdd \
+	floppy/fdc \
+	floppy/fdi2raw \
+	floppy/fdd_common \
+	floppy/fdd_86f \
+	floppy/fdd_fdi \
+	floppy/fdd_imd \
+	floppy/fdd_img \
+	floppy/fdd_json \
+	floppy/fdd_mfm \
+	floppy/fdd_td0
+
+HDDFILES := \
+	disk/hdd \
+	disk/hdd_image \
+	disk/hdd_table \
+	disk/hdc \
+	disk/hdc_st506_xt \
+	disk/hdc_st506_at \
+	disk/hdc_xta \
+	disk/hdc_esdi_at \
+	disk/hdc_esdi_mca \
+	disk/hdc_xtide \
+	disk/hdc_ide \
+	disk/hdc_ide_sff8038i
+
+CDROMFILES := \
+	cdrom/cdrom \
+	cdrom/cdrom_image \
+	cdrom/cdrom_image_backend
+
+ZIPFILES := disk/zip
+
+ifeq ($(USB), y)
+USBFILES := usb
+endif
+
+SCSIFILES := \
+	scsi/scsi \
+	scsi/scsi_device \
+	scsi/scsi_cdrom \
+	scsi/scsi_disk \
+	scsi/scsi_x54x \
+	scsi/scsi_aha154x \
+	scsi/scsi_buslogic \
+	scsi/scsi_ncr5380 \
+	scsi/scsi_ncr53c8xx
+
+NETFILES := \
+	network/network \
+	network/net_dp8390 \
+	network/net_3c503 \
+	network/net_ne2000 \
+	network/net_pcnet \
+	network/net_wd8003
+
+NETPCAPFILES := \
+	network/net_pcap \
+
+NETSLIRPFILES := \
+	network/net_slirp \
+	network/slirp/bootp \
+	network/slirp/ip_icmp \
+	network/slirp/misc \
+	network/slirp/socket \
+	network/slirp/tcp_timer \
+	network/slirp/cksum \
+	network/slirp/ip_input \
+	network/slirp/queue \
+	network/slirp/tcp_input \
+	network/slirp/debug \
+	network/slirp/ip_output \
+	network/slirp/sbuf \
+	network/slirp/tcp_output \
+	network/slirp/udp \
+	network/slirp/if \
+	network/slirp/mbuf \
+	network/slirp/slirp \
+	network/slirp/tcp_subr
+
+PRINTFILES := \
+	printer/png \
+	printer/prt_cpmap \
+        printer/prt_escp \
+	printer/prt_text
+
+PRINTDISFILES := \
+	printer/prt_ps
+
+SNDFILES := \
+	sound/sound \
+	sound/openal \
+	sound/snd_opl \
+	sound/snd_opl_backend \
+	sound/nukedopl \
+	sound/midi \
+	sound/midi_system \
+	sound/snd_speaker \
+	sound/snd_pssj \
+	sound/snd_lpt_dac \
+	sound/snd_lpt_dss \
+	sound/snd_adlib \
+	sound/snd_adlibgold \
+	sound/snd_ad1848 \
+	sound/snd_audiopci \
+	sound/snd_cms \
+	sound/snd_gus \
+	sound/snd_sb \
+	sound/snd_sb_dsp \
+	sound/snd_emu8k \
+	sound/snd_mpu401 \
+	sound/snd_sn76489 \
+	sound/snd_ssi2001 \
+	sound/snd_wss \
+	sound/snd_ym7128
+
+SNDCXXFILES := \
+	sound/snd_resid \
+	sound/resid-fp/convolve \
+	sound/resid-fp/convolve-sse \
+	sound/resid-fp/envelope \
+	sound/resid-fp/extfilt \
+	sound/resid-fp/filter \
+	sound/resid-fp/pot \
+	sound/resid-fp/sid \
+	sound/resid-fp/voice \
+	sound/resid-fp/wave6581__ST \
+	sound/resid-fp/wave6581_P_T \
+	sound/resid-fp/wave6581_PS_ \
+	sound/resid-fp/wave6581_PST \
+	sound/resid-fp/wave8580__ST \
+	sound/resid-fp/wave8580_P_T \
+	sound/resid-fp/wave8580_PS_ \
+	sound/resid-fp/wave8580_PST \
+	sound/resid-fp/wave
+
+VIDFILES := \
+	video/video \
+	video/vid_table \
+	video/vid_cga \
+	video/vid_cga_comp \
+	video/vid_compaq_cga \
+	video/vid_mda \
+	video/vid_hercules \
+	video/vid_herculesplus \
+	video/vid_incolor \
+	video/vid_colorplus \
+	video/vid_genius \
+	video/vid_pgc \
+	video/vid_im1024 \
+	video/vid_sigma \
+	video/vid_wy700 \
+	video/vid_ega \
+	video/vid_ega_render \
+	video/vid_svga \
+	video/vid_svga_render \
+	video/vid_vga \
+	video/vid_ati_eeprom \
+	video/vid_ati18800 \
+	video/vid_ati28800 \
+	video/vid_ati_mach64 \
+	video/vid_ati68860_ramdac \
+	video/vid_bt48x_ramdac \
+	video/vid_av9194 \
+	video/vid_icd2061 \
+	video/vid_ics2595 \
+	video/vid_cl54xx \
+	video/vid_et4000 \
+	video/vid_sc1502x_ramdac \
+	video/vid_et4000w32 \
+	video/vid_stg_ramdac \
+	video/vid_ht216 \
+	video/vid_oak_oti \
+	video/vid_paradise \
+	video/vid_ti_cf62011 \
+	video/vid_tvga \
+	video/vid_tgui9440 \
+	video/vid_tkd8001_ramdac \
+	video/vid_att20c49x_ramdac \
+	video/vid_s3 \
+	video/vid_s3_virge \
+	video/vid_sdac_ramdac \
+	video/vid_voodoo
+
+AROSPLATFILES := \
+	aros/aros \
+	aros/aros_settings \
+	aros/aros_dynld \
+	aros/aros_ui \
+	aros/aros_stbar \
+	aros/aros_dialog \
+	aros/aros_thread \
+	aros/aros_cdrom \
+	aros/aros_keyboard \
+	aros/aros_mouse \
+	aros/aros_joystick \
+	aros/aros_sdl \
+	aros/aros_midi
+
+PLATFILES := $(AROSPLATFILES)
+
+FILES := \
+	$(MAINFILES) $(INTELFILES) $(CPUFILES) $(CHIPSETFILES) $(MCHFILES) \
+	$(DEVFILES) $(FDDFILES) $(CDROMFILES) $(ZIPFILES) $(HDDFILES) \
+	$(USBFILES) $(NETFILES) $(PRINTFILES) $(SCSIFILES) $(SNDFILES) $(VIDFILES) \
+	$(DEVBRFILES) $(DISCORDFILES)
+
+ifdef EXFILES
+FILES += $(EXFILES)
+endif
+
+CXXFILES := \
+	$(SNDCXXFILES)
+
+# Final versions of the toolchain flags.
+USER_CPPFLAGS := $(OPTS) -DNO_PCAP -DNO_SLIRP -DNO_PS
+# -mstackrealign 
+USER_CFLAGS := -fomit-frame-pointer -fno-strict-aliasing -funroll-loops
+USER_CFLAGS += -Wno-implicit-function-declaration -Wno-unused-variable
+USER_LDFLAGS += -static-libstdc++
+USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
+
+USER_CPPFLAGS += -DENABLE_CONFIG_LOG=1
+
+%build_prog mmake=local-86box-binary \
+    progname=$(PROG) targetdir=$(EXEDIR) \
+    files="$(PLATFILES) $(FILES)" cxxfiles="$(CXXFILES)" \
+    uselibs="SDL png openal z"
+
+%common
+
