@@ -10,7 +10,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- local-86box : local-86box-$(AROS_TARGET_CPU)
 #MM- local-86box-i386 : local-86box-binary
 #MM- local-86box-x86_64 : local-86box-binary
-#MM local-86box-binary : contrib-sdl contrib-openal
+#MM local-86box-binary : contrib-sdl contrib-openal iconset-Gorilla-86box-icons
 
 #MM- local-86box-quick : local-86box-$(AROS_TARGET_CPU)-quick
 #MM- local-86box-i386-quick : local-86box-binary-quick
@@ -617,7 +617,7 @@ AROSPLATFILES := \
 	aros/aros_keyboard \
 	aros/aros_mouse \
 	aros/aros_joystick \
-	aros/aros_sdl \
+	aros/aros_amigavideo \
 	aros/aros_midi
 
 PLATFILES := $(AROSPLATFILES)
@@ -642,8 +642,6 @@ USER_CFLAGS := -fomit-frame-pointer -fno-strict-aliasing -funroll-loops
 USER_CFLAGS += -Wno-implicit-function-declaration -Wno-unused-variable
 USER_LDFLAGS += -static-libstdc++
 USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
-
-USER_CPPFLAGS += -DENABLE_CONFIG_LOG=1
 
 %build_prog mmake=local-86box-binary \
     progname=$(PROG) targetdir=$(EXEDIR) \

@@ -2,15 +2,18 @@
     $Id$
 */
 
-#define DEBUG 1
 #include <aros/debug.h>
 
 #include <proto/exec.h>
+#include <proto/graphics.h>
+#include <proto/cybergraphics.h>
+#include <proto/alib.h>
 
 #include <exec/types.h>
 #include <dos/dos.h>
 #include <devices/timer.h>
 #include <intuition/intuition.h>
+#include <cybergraphx/cybergraphics.h>
 
 #include <pthread.h>
 
@@ -22,17 +25,21 @@
 #include "../86box.h"
 #include "../plat.h"
 #include "../ui.h"
+#include "../video/video.h"
 
 #include "aros.h"
 
-extern struct timerequest *secreq;
+extern void amiga_dokeyevent(UWORD);
+extern struct timerequest *secreq, *dispupdreq;
+
 struct Task *uiTask = NULL;
 struct Window *displayWindow = NULL;
+struct BitMap *renderBitMap = NULL;
 
 ULONG timer_sigbit = 0;
-ULONG uisignal_refresh = 0;
 ULONG uisignal_window = 0;
 ULONG uisignal_hreset = 0;
+ULONG uisignal_blit = 0;
 
 char uiTitle[256] = "";
 
@@ -44,17 +51,60 @@ ui_window_title(wchar_t *s)
     if ((s) && (strcmp(uiTitle, s)))
     {
 	strcpy(uiTitle, s);
-
-	if (uiTask == FindTask(NULL))
-	    plat_settitle(uiTitle);
-	else
-	{
-	    Signal(uiTask, 1 << uisignal_refresh);
-	}
+	if (displayWindow)
+	    SetWindowTitles(displayWindow, s, NULL);
     }
 
     return(uiTitle);
 }
+
+void
+amiga_blit(int x, int y, int y1, int y2, int w, int h)
+{
+    void *pixeldata;
+    int pitch;
+    int yy, ret;
+
+    D(bug("86Box:%s(%d -> %d)\n", __func__, y1, y2);)
+
+    if ((y1 == y2) || (h <= 0)) {
+	video_blit_complete();
+	return;
+    }
+
+    if (buffer32 == NULL) {
+        D(bug("86Box:%s - nothing to render\n", __func__);)
+	video_blit_complete();
+	return;
+    }
+
+    D(bug("86Box:%s - rendering display\n", __func__);)
+    D(bug("86Box:%s - render_buffer->dat = 0x%p\n", __func__, render_buffer->dat);)
+
+    if (displayWindow)
+    {
+        struct RastPort *BMRastPort = CloneRastPort(displayWindow->RPort);
+
+        if (BMRastPort)
+        {
+	    WritePixelArray(
+		 render_buffer->dat,
+		 0,
+		 (y + y1),
+		 (render_buffer->w << 2),
+		 BMRastPort,
+		 x,
+		 y,
+		 w,
+		 h,
+		 RECTFMT_ARGB);
+
+            FreeRastPort(BMRastPort);
+        }
+    }
+    video_blit_complete();
+}
+
 
 void
 plat_mouse_capture(int on)
@@ -71,13 +121,6 @@ plat_pause(int p)
     dopause = p;
 }
 
-/* Tell the UI about a new screen resolution. */
-void
-plat_resize(int x, int y)
-{
-    D(bug("86Box:%s(%d, %d)\n", __func__, x, y);)
-}
-
 void ui_thread(void)
 {
     /*
@@ -88,12 +131,12 @@ void ui_thread(void)
      */
     do_start();
 
-    /* Run the message loop. It will run until GetMessage() returns 0 */
+    /* Run the message loop. */
     while (! quited) {
 	ULONG signals  = Wait((1 << timer_sigbit) |
 					  (1 << uisignal_window) |
 					  (1 << uisignal_hreset) |
-					  (1 << uisignal_refresh) |
+					  (1 << uisignal_blit) |
 					  SIGBREAKF_CTRL_C |
 					  SIGBREAKF_CTRL_D);
 	if (signals & (1 << uisignal_hreset))
@@ -104,13 +147,14 @@ void ui_thread(void)
 
 	    pc_reset(1);
 	}
-	if (signals & (1 << uisignal_refresh))
+	if (signals & (1 << uisignal_blit))
 	{
-	    D(bug("86Box:%s - uisignal_refresh\n", __func__);)
+	    SetSignal(0, (1 << uisignal_blit));
+	    if (displayWindow && renderBitMap)
+		BltBitMapRastPort(renderBitMap, 0, 0,
+					    displayWindow->RPort, 0, 0, scrnsz_x, scrnsz_y, 0xC0);
 
-	    SetSignal(0, (1 << uisignal_refresh));
-
-	    plat_settitle(uiTitle);
+	    SendIO(&dispupdreq->tr_node);
 	}
 	if (signals & (1 << uisignal_window))
 	{
@@ -128,6 +172,10 @@ void ui_thread(void)
 		    displayWindow->UserPort->mp_SigTask = NULL;
 		    quited = 1;
 		}
+		else if (wMsg->Class == IDCMP_RAWKEY)
+		{
+		    amiga_dokeyevent(wMsg->Code);
+		}
 		ReplyMsg((struct Message *)wMsg);
 	    }
 	    SetSignal(0, (1 << uisignal_window));
@@ -140,6 +188,7 @@ void ui_thread(void)
 	    SetSignal(0, (1 << timer_sigbit));
 
 	    pc_onesec();
+
 	    // Send IORequest
 	    SendIO(&secreq->tr_node);
 	}
@@ -173,7 +222,7 @@ void ui_freesignals(void)
 
     FreeSignal(uisignal_hreset);
     FreeSignal(uisignal_window);
-    FreeSignal(uisignal_refresh);    
+    FreeSignal(uisignal_blit);
 }
 
 int
@@ -182,12 +231,11 @@ ui_init(int cmdShow)
     D(bug("86Box:%s(%d)\n", __func__, cmdShow);)
 
     uiTask = FindTask(NULL);
-    uisignal_refresh = AllocSignal(-1);
     uisignal_window = AllocSignal(-1);
     uisignal_hreset = AllocSignal(-1);
+    uisignal_blit = AllocSignal(-1);
 
     D(bug("86Box:%s - UI Task @ 0x%p\n", __func__, uiTask);)
-    D(bug("86Box:%s - refresh signal = %d\n", __func__, uisignal_refresh);)
     D(bug("86Box:%s - reset signal = %d\n", __func__, uisignal_hreset);)
 
     if (settings_only) {

@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#if defined(__AROS__)
+# include <string.h>
+#endif
 #define HAVE_STDARG_H
 #include "../86box.h"
 #include "cpu.h"

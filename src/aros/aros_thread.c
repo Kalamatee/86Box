@@ -2,7 +2,6 @@
     $Id$
 */
 
-#define DEBUG 1
 #include <aros/debug.h>
 
 #include <proto/exec.h>
@@ -23,13 +22,19 @@
 #include "../86box.h"
 #include "../plat.h"
 
+#include "aros.h"
+
 extern struct Task *mainTask;
 extern ULONG timer_sigbit;
 
+struct MinList ThreadList;
+
 typedef struct {
+    struct MinNode node;
     pthread_t thread;
     void (*func)(void *);
     void *param;
+    struct ThreadLocalData tld;
 } aros_thread_t;
 
 typedef struct {
@@ -47,7 +52,6 @@ void *thread_startup(void *arg)
     aros_thread_t *at = (aros_thread_t *)arg;
     struct Task *thisTask;
     struct MsgPort *timerport;   /* Message port pointer */
-    struct timerequest *timerreq;
 
     D(bug("86Box:%s()\n", __func__);)
 
@@ -66,22 +70,37 @@ void *thread_startup(void *arg)
     timerport->mp_SigBit = timer_sigbit;
     timerport->mp_SigTask = mainTask;
 
-    thisTask->tc_UserData = timerreq = (struct timerequest *)CreateIORequest(timerport, sizeof(struct timerequest));
+    thisTask->tc_UserData = &at->tld;
+    at->tld.timerreq = (struct timerequest *)CreateIORequest(timerport, sizeof(struct timerequest));
     if (!thisTask->tc_UserData)
     {
-        DeleteMsgPort(timerport);
+        DeletePort(timerport);
         return NULL;
     }
 
-    if ((OpenDevice("timer.device", UNIT_MICROHZ, &timerreq->tr_node, 0)) != 0)
+    if ((OpenDevice("timer.device", UNIT_MICROHZ, &at->tld.timerreq->tr_node, 0)) != 0)
     {
-        DeleteIORequest(&timerreq->tr_node);
-        DeleteMsgPort(timerport);
+        DeleteIORequest(&at->tld.timerreq->tr_node);
+        DeletePort(timerport);
         return NULL;
     }
 
+    D(bug("86Box:%s - timerreq @ 0x%p\n", __func__, at->tld.timerreq);)
+
+    AddTail((struct List *)&ThreadList, (struct Node *)&at->node);
     /* call the thread .. */
     at->func(at->param);
+    Remove((struct Node *)&at->node);
+
+    D(bug("86Box:%s - Exiting Task @ 0x%p\n", __func__, thisTask);)
+
+    CloseDevice(&at->tld.timerreq->tr_node);
+
+    timerport->mp_Flags = 0;
+    timerport->mp_SigBit = 0;
+    timerport->mp_SigTask = NULL;
+    
+    DeletePort(timerport);
 
     return NULL;
 }
