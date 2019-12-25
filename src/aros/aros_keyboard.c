@@ -112,7 +112,7 @@ uint16_t	scancode_map[100] =
     99,
 };
 
-void amiga_dokeyevent(UWORD keycode)
+void aros_dokeyevent(UWORD keycode)
 {
     UWORD plainkey;
 

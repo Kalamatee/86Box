@@ -86,6 +86,9 @@ void *thread_startup(void *arg)
     }
 
     D(bug("86Box:%s - timerreq @ 0x%p\n", __func__, at->tld.timerreq);)
+    D(bug("86Box:%s - thread mn_ReplyPort @ %p\n", __func__, at->tld.timerreq->tr_node.io_Message.mn_ReplyPort);)
+    D(bug("86Box:%s - thread io_Device @ 0x%p\n", __func__, at->tld.timerreq->tr_node.io_Device);)
+    D(bug("86Box:%s - thread io_Unit @ 0x%p\n", __func__, at->tld.timerreq->tr_node.io_Unit);)
 
     AddTail((struct List *)&ThreadList, (struct Node *)&at->node);
     /* call the thread .. */

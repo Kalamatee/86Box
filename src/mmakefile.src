@@ -22,7 +22,7 @@ EXEDIR          := $(AROS_CONTRIB)/Emu/86Box
 CPU_DIR		:= cpu
 #CPU_DIR		:= cpu_new
 
-DEBUG		:= y
+DEBUG		:= n
 DEV_BUILD	:= y
 
 # Various compile-time options.

@@ -28,14 +28,16 @@
 #include "aros.h"
 #include "aros_amigavideo.h"
 #if (0)
-#include "aros_amigavideo.h"
+#include "aros_sdl.h"
 #endif
 
 extern ULONG timer_sigbit;
 extern struct MinList ThreadList;
 extern struct BitMap *renderBitMap;
+extern struct Window *displayWindow;
+extern struct RastPort *BMRastPort;
 
-thread_t *thMain = NULL;
+thread_t *thMain = NULL; /* The main PC emulation thread */
 struct Task *mainTask = NULL;
 struct timerequest *secreq = NULL;
 
@@ -116,6 +118,13 @@ int main(int argc, char **argv)
         DeletePort(timerport);
         return(retval);
     }
+
+    D_TICK(
+        bug("86Box:%s - mainTask mn_ReplyPort @ 0x%p\n", __func__, td->timerreq->tr_node.io_Message.mn_ReplyPort);
+        bug("86Box:%s - mainTask mn_Length = %d\n", __func__, td->timerreq->tr_node.io_Message.mn_Length);
+        bug("86Box:%s - mainTask io_Device @ 0x%p\n", __func__, td->timerreq->tr_node.io_Device);
+        bug("86Box:%s - mainTask io_Unit = %d\n", __func__, td->timerreq->tr_node.io_Unit);
+    )
 
     /* Set the application version ID string. */
     sprintf(emu_version, "%s v%s", EMU_NAME, EMU_VERSION);
@@ -469,8 +478,8 @@ plat_delay_ms(uint32_t count)
     timerreq->tr_time.tv_secs    = 0;
     timerreq->tr_time.tv_micro   = count;
 
-    // Send IORequest
 #if (0)
+    // Send IORequest
     DoIO(&timerreq->tr_node);
 #endif
 }
@@ -484,19 +493,22 @@ plat_resize(int x, int y)
     D(bug("86Box:%s(%dx%d)\n", __func__, x, y);)
     if (renderBitMap)
     {
-	if ((x <= GetBitMapAttr(renderBitMap, BMA_WIDTH)) &&
-            (y <= GetBitMapAttr(renderBitMap, BMA_HEIGHT)))
-	    return;
-        D(bug("86Box:%s - destroying old bitmap...\n", __func__);)
-	FreeBitMap(renderBitMap);
-	renderBitMap = NULL;
+	if ((x > GetBitMapAttr(renderBitMap, BMA_WIDTH)) ||
+            (y > GetBitMapAttr(renderBitMap, BMA_HEIGHT)))
+        {
+            struct BitMap *disposebm = renderBitMap;
+            renderBitMap = NULL;
+            D(bug("86Box:%s - destroying old bitmap...\n", __func__);)
+            FreeBitMap(disposebm);
+        }
     }
 
-    D(bug("86Box:%s - allocating new bitmap...\n", __func__);)
-
-    renderBitMap = AllocBitMap(x, y, 24,  BMF_CLEAR, NULL);
-    D(bug("86Box:%s - BitMap @ 0x%p\n", __func__, renderBitMap);)
-
+    if (!renderBitMap)
+    {
+        D(bug("86Box:%s - allocating new bitmap...\n", __func__);)
+        renderBitMap = AllocBitMap(x, y, 24, BMF_CLEAR, (displayWindow) ? displayWindow->RPort->BitMap : NULL);
+        D(bug("86Box:%s - BitMap @ 0x%p\n", __func__, renderBitMap);)
+    }
     if (vid_apis[0][vid_api].resize)
         vid_apis[0][vid_api].resize(x, y);
 

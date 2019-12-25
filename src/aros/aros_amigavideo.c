@@ -11,6 +11,7 @@
 #include <exec/types.h>
 #include <dos/dos.h>
 #include <intuition/intuition.h>
+#include <cybergraphx/cybergraphics.h>
 
 #include <stdint.h>
 #include <stdio.h>
@@ -29,6 +30,8 @@ extern struct Task *uiTask;
 extern ULONG uisignal_window;
 extern ULONG uisignal_blit;
 extern struct Window *displayWindow;
+extern struct RastPort *BMRastPort;
+extern struct BitMap *renderBitMap;
 
 static volatile int amigavid_enabled = 0;
 struct timerequest *dispupdreq;
@@ -39,9 +42,18 @@ void	amigavid_close(void)
 
     /* Unregister our renderer! */
     video_setblit(NULL);
-    
+
+    if (BMRastPort)
+    {
+        FreeRastPort(BMRastPort);
+        BMRastPort = NULL;
+    }
+
     if (displayWindow)
+    {
         CloseWindow(displayWindow);
+        displayWindow = NULL;
+    }
 }
 
 int amigavid_init(APTR h)
@@ -54,6 +66,7 @@ int amigavid_init(APTR h)
     vbtimerport = CreatePort(0,0);
     if (!vbtimerport)
     {
+        D(bug("86Box:%s - failed to create a msg port\n", __func__);)
         return(0);
     }
 
@@ -64,15 +77,19 @@ int amigavid_init(APTR h)
     dispupdreq = (struct timerequest *)CreateIORequest(vbtimerport, sizeof(struct timerequest));
     if (!dispupdreq)
     {
+        D(bug("86Box:%s - failed to allocate an iorequest\n", __func__);)
         DeletePort(vbtimerport);
+        vbtimerport = NULL;
         return(0);
     }
 
-
     if ((OpenDevice("timer.device", UNIT_MICROHZ, &dispupdreq->tr_node, 0)) != 0)
     {
+        D(bug("86Box:%s - failed to open timer.device\n", __func__);)
         DeleteIORequest(&dispupdreq->tr_node);
+        dispupdreq = NULL;
         DeletePort(vbtimerport);
+        vbtimerport = NULL;
         return(0);
     }
 
@@ -87,16 +104,25 @@ int amigavid_init(APTR h)
             WA_IDCMP, IDCMP_CLOSEWINDOW | IDCMP_RAWKEY,
             TAG_END))
     {
-        displayWindow->UserPort->mp_Flags = PA_SIGNAL;
-        displayWindow->UserPort->mp_SigBit = uisignal_window;
-        displayWindow->UserPort->mp_SigTask = uiTask;
+        BMRastPort = CreateRastPort();
 
+        if (displayWindow->UserPort)
+        {
+            displayWindow->UserPort->mp_Flags = PA_SIGNAL;
+            displayWindow->UserPort->mp_SigBit = uisignal_window;
+            displayWindow->UserPort->mp_SigTask = uiTask;
+        }
         dispupdreq->tr_node.io_Command = TR_ADDREQUEST;
         dispupdreq->tr_time.tv_secs    = 0;
-        dispupdreq->tr_time.tv_micro   = 1000000 / 60;
+        dispupdreq->tr_time.tv_micro   = (1000000 / 60);
+
+        D_VBLANK(bug("86Box:%s -        tv_micro = %d\n", __func__, dispupdreq->tr_time.tv_micro);)
 
         /* Register our renderer! */
         video_setblit(amiga_blit);
+
+        SendIO(&dispupdreq->tr_node);
+
         return(1);
     }
     return(0);
@@ -127,7 +153,28 @@ void	amigavid_resize(int x, int y)
         diffy = y - height;
 
     if (displayWindow)
+    {
+        if (renderBitMap)
+        {
+	    APTR tmp = BMRastPort->BitMap;
+	    BMRastPort->BitMap = renderBitMap;
+	    WritePixelArray(
+		 render_buffer->dat,
+		 0,
+		 0,
+		 (render_buffer->w << 2),
+		 BMRastPort,
+		 0,
+		 0,
+		 x,
+		 y,
+		 RECTFMT_BGRA32);
+	    BMRastPort->BitMap = tmp;
+	    return;
+        }
+
         SizeWindow(displayWindow, diffx, diffy);
+    }
 }
 
 void	amigavid_enable(int enable)
