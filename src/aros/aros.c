@@ -74,7 +74,7 @@ static const struct {
   }
 };
 
-CONST_STRPTR versionstr = "$VER: " EMU_NAME " " EMU_VERSION " (22.12.2019)";
+CONST_STRPTR versionstr = "$VER: " EMU_NAME " " EMU_VERSION " (25.12.2019)";
 
 int main(int argc, char **argv)
 {
