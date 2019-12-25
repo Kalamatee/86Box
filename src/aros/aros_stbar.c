@@ -18,6 +18,7 @@
 #include "../plat.h"
 
 static int	sb_ready = 0;
+int sb_height = 0;
 
 /* API: mark the status bar as not ready. */
 void
