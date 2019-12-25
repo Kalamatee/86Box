@@ -1,12 +1,12 @@
-# Copyright © 2004-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros.cfg
 
 BASEICONS := \
-         86Box
+         86box
 
 #MM- iconset-Gorilla-86box-icons-clean : iconset-Gorilla-86box-icons-aros-clean
 #MM- iconset-Gorilla-86box-icons : iconset-Gorilla-86box-icons-app
 
-%build_icons mmake=iconset-Gorilla-86box-icons-app icons=$(BASEICONS) dir=$(AROS_CONTRIB)/Emu/86Box
+%build_icons mmake=iconset-Gorilla-86box-icons-app icons=$(BASEICONS) dir=$(AROS_CONTRIB)/Emu/86box

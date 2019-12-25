@@ -16,8 +16,8 @@ include $(SRCDIR)/config/aros.cfg
 #MM- local-86box-i386-quick : local-86box-binary-quick
 #MM- local-86box-x86_64-quick : local-86box-binary-quick
 
-PROG		:= 86Box
-EXEDIR          := $(AROS_CONTRIB)/Emu/86Box
+PROG		:= 86box
+EXEDIR          := $(AROS_CONTRIB)/Emu/86box
 
 CPU_DIR		:= cpu
 #CPU_DIR		:= cpu_new
