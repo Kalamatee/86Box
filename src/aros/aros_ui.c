@@ -26,6 +26,7 @@
 #include "../plat.h"
 #include "../ui.h"
 #include "../video/video.h"
+#include "../mouse.h"
 
 #include "aros.h"
 
@@ -126,6 +127,8 @@ plat_pause(int p)
 
 void ui_thread(void)
 {
+    BOOL winactive = FALSE, inside = TRUE;
+    UWORD blankCursor = 0;
     /*
      * Everything has been configured, and all seems to work,
      * so now it is time to start the main thread to do some
@@ -185,16 +188,104 @@ void ui_thread(void)
 	    while (wMsg = (struct IntuiMessage *)GetMsg(displayWindow->UserPort))
 	    {
 		D(bug("86Box:%s - Msg @ 0x%p\n", __func__, wMsg);)
-		if (wMsg->Class == IDCMP_CLOSEWINDOW)
+		if (!quited)
 		{
-		    displayWindow->UserPort->mp_Flags = 0;
-		    displayWindow->UserPort->mp_SigBit = 0;
-		    displayWindow->UserPort->mp_SigTask = NULL;
-		    quited = 1;
-		}
-		else if (wMsg->Class == IDCMP_RAWKEY)
-		{
-		    aros_dokeyevent(wMsg->Code);
+		    switch(wMsg->Class)
+		    {
+		    case IDCMP_MOUSEBUTTONS:
+			{
+			    if (wMsg->Code == SELECTDOWN)
+				mouse_buttons |= 1;
+			    else if (wMsg->Code == SELECTUP)
+				mouse_buttons &= ~1;
+			    else if (wMsg->Code == MENUDOWN)
+				mouse_buttons |= 2;
+			    else if (wMsg->Code == MENUUP)
+				mouse_buttons &= ~2;
+			    else if (wMsg->Code == MIDDLEDOWN)
+				mouse_buttons |= 4;
+			    else if (wMsg->Code == MIDDLEUP)
+				mouse_buttons &= ~4;
+			}
+			break;
+		    case IDCMP_MOUSEMOVE:
+			{
+			    if (wMsg->MouseX < 0)
+			    {
+				mouse_x = 0;
+				inside = FALSE;
+			    }
+			    else if (wMsg->MouseX > scrnsz_x)
+			    {
+				mouse_x = scrnsz_x;
+				inside = FALSE;
+			    }
+			    else
+			    {
+				mouse_x = wMsg->MouseX;
+			    }
+			    if (wMsg->MouseY < 0)
+			    {
+				mouse_y = 0;
+				inside = FALSE;
+			    }
+			    else if (wMsg->MouseY > scrnsz_y)
+			    {
+				mouse_y = scrnsz_y;
+				inside = FALSE;
+			    }
+			    else
+			    {
+				mouse_y = wMsg->MouseX;
+			    }
+			    if (winactive && inside)
+			    {
+				mouse_capture = 1;
+				if (displayWindow)
+				    SetPointer(displayWindow, &blankCursor, 1, 1, 0, 0);
+			    }
+			    else
+			    {
+				mouse_capture = 0;
+				if (displayWindow)
+				    SetWindowPointer(displayWindow, WA_Pointer, NULL, TAG_DONE );
+			    }
+			}
+			break;
+		    case IDCMP_ACTIVEWINDOW:
+			winactive = TRUE;
+			if (inside)
+			{
+			    mouse_capture = 1;
+			    if (displayWindow)
+				SetPointer(displayWindow, &blankCursor, 1, 1, 0, 0);
+			}
+			else
+			{
+			    mouse_capture = 0;
+			    if (displayWindow)
+				SetWindowPointer(displayWindow, WA_Pointer, NULL, TAG_DONE );
+			}
+			break;
+		    case IDCMP_INACTIVEWINDOW:
+			winactive = FALSE;
+			mouse_capture = 0;
+			SetWindowPointer(displayWindow, WA_Pointer, NULL, TAG_DONE );
+			break;
+		    case IDCMP_CLOSEWINDOW:
+			{
+			    displayWindow->UserPort->mp_Flags = 0;
+			    displayWindow->UserPort->mp_SigBit = 0;
+			    displayWindow->UserPort->mp_SigTask = NULL;
+			    quited = 1;
+			}
+			break;
+		    case IDCMP_RAWKEY:
+			{
+			    aros_dokeyevent(wMsg->Code);
+			}
+			break;
+		    }
 		}
 		ReplyMsg((struct Message *)wMsg);
 	    }

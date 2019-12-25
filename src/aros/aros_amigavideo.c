@@ -26,6 +26,8 @@
 
 extern void amiga_blit(int x, int y, int y1, int y2, int w, int h);
 
+extern int sb_height;
+
 extern struct Task *uiTask;
 extern ULONG uisignal_window;
 extern ULONG uisignal_blit;
@@ -95,13 +97,13 @@ int amigavid_init(APTR h)
 
     if (displayWindow = OpenWindowTags(NULL,
             WA_InnerWidth, scrnsz_x,
-            WA_InnerHeight, scrnsz_y,
+            WA_InnerHeight, scrnsz_y + sb_height,
             WA_DragBar, TRUE,
             WA_CloseGadget, TRUE,
             WA_DepthGadget, TRUE,
             WA_Title, (IPTR)emu_version,
             WA_Flags, WFLG_GIMMEZEROZERO,
-            WA_IDCMP, IDCMP_CLOSEWINDOW | IDCMP_RAWKEY,
+            WA_IDCMP, (IDCMP_CLOSEWINDOW | IDCMP_RAWKEY | IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_ACTIVEWINDOW | IDCMP_INACTIVEWINDOW),
             TAG_END))
     {
         BMRastPort = CreateRastPort();
@@ -137,7 +139,7 @@ int amigavid_pause(void)
 void	amigavid_resize(int x, int y)
 {
     UWORD width = displayWindow->Width - (displayWindow->BorderLeft + displayWindow->BorderRight);
-    UWORD height = displayWindow->Height - (displayWindow->BorderTop + displayWindow->BorderBottom);
+    UWORD height = displayWindow->Height - (displayWindow->BorderTop + displayWindow->BorderBottom + sb_height);
     WORD diffx, diffy;
 
     D(bug("86Box:%s(%dx%d)\n", __func__, x, y);)
