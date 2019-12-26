@@ -97,7 +97,7 @@ amiga_blit(int x, int y, int y1, int y2, int w, int h)
 		 (render_buffer->w << 2),
 		 BMRastPort,
 		 0,
-		 0,
+		 y1,
 		 w,
 		 h,
 		 RECTFMT_BGRA32);
