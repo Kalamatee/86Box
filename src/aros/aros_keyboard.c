@@ -2,10 +2,11 @@
     $Id$
 */
 
-#define DEBUG 1
 #include <aros/debug.h>
 
 #include <stdint.h>
+
+#include "aros.h"
 
 /* map amiga rawkeys to scancodes */
 uint16_t	scancode_map[104] =
