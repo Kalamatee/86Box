@@ -61,11 +61,11 @@ Object *statusbarObj = NULL;
 #define MUIM_AmigaVideoRender_VBlank            (TAG_USER + 0xf1f2)
 
 struct AmigaVideoRender_DATA {
-    struct MUI_EventHandlerNode   ehn;
+    struct MUI_EventHandlerNode ehn;
     struct MUI_InputHandlerNode ihnvb;
     struct MUI_InputHandlerNode ihnos;
-    UWORD LastMX, LastMY;
-    BOOL winactive, inside;
+    UWORD                       LastMX, LastMY;
+    BOOL                        winactive, inside;
 };
 
 Object *AmigaVideoRender__OM_NEW(Class *CLASS, Object *self, struct opSet *message)

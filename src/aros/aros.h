@@ -6,7 +6,7 @@ struct ThreadLocalData
     struct timerequest *timerreq;
 };
 
-#if defined(DEBUG)
+#if defined(DEBUG) && (DEBUG > 0)
 #define D_TICK(x)       x
 #define D_VBLANK(x)     x
 #define D_EVENT(x)      x
