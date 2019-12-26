@@ -151,19 +151,33 @@ int main(int argc, char **argv)
 # endif
 #endif
 
+    struct Process *thisProc;
     struct MsgPort *timerport;   /* Message port pointer */
     struct timerequest *timerreq;
     struct ThreadLocalData *td;
     struct Hook hook_AboutToggle;
+    CONST_STRPTR taskname;
     int retval = 0;
     BPTR lock;
 
     D(bug("86Box:%s()\n", __func__);)
 
     mainTask = FindTask(NULL);
-    NEWLIST(&ThreadList);
+    thisProc = (struct Process *)mainTask;
+    taskname = mainTask->tc_Node.ln_Name;
 
     D(bug("86Box:%s - MainTask @ 0x%p\n", __func__, mainTask);)
+
+    /*
+     * handle workbench startup if applicable... 
+     */
+    if (!thisProc->pr_CLI)
+    {
+        argv = (char **)&taskname;
+        argc = 1;
+    }
+
+    NEWLIST(&ThreadList);
 
     /* Set the application version ID string. */
     sprintf(emu_version, "%s v%s", EMU_NAME, EMU_VERSION);
