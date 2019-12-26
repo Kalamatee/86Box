@@ -31,6 +31,9 @@
 #include "aros_stbar.h"
 #include "aros_mouse.h"
 
+#if !defined(MIN)
+#define MIN(a, b)       ((a) < (b)) ? (a) : (b)
+#endif
 extern void amiga_blit(int x, int y, int y1, int y2, int w, int h);
 
 extern int sb_height;
@@ -48,15 +51,20 @@ Object *statusbarObj = NULL;
  ** *****************************************************************************
  **/
 
+// Private Attributes ..
+#define MUIA_AmigaVideoRender_Activate          (TAG_USER + 0xf1f1)
+
+#define MUIA_AmigaVideoWindow_ShowCursor        (TAG_USER + 0xf2f1)
+
 // Private Methods ..
-#define MUIM_AmigaVideoRender_Timer     (TAG_USER + 0xf1f1)
-#define MUIM_AmigaVideoRender_VBlank    (TAG_USER + 0xf1f2)
+#define MUIM_AmigaVideoRender_Timer             (TAG_USER + 0xf1f1)
+#define MUIM_AmigaVideoRender_VBlank            (TAG_USER + 0xf1f2)
 
 struct AmigaVideoRender_DATA {
     struct MUI_EventHandlerNode   ehn;
     struct MUI_InputHandlerNode ihnvb;
     struct MUI_InputHandlerNode ihnos;
-    ULONG blankCursor;
+    UWORD LastMX, LastMY;
     BOOL winactive, inside;
 };
 
@@ -87,7 +95,7 @@ Object *AmigaVideoRender__OM_NEW(Class *CLASS, Object *self, struct opSet *messa
         data->inside = FALSE;
 
         /* events we want to handle .. */
-        data->ehn.ehn_Events   = IDCMP_INACTIVEWINDOW | IDCMP_ACTIVEWINDOW | IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY;
+        data->ehn.ehn_Events   = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY;
         data->ehn.ehn_Priority = 1;
         data->ehn.ehn_Flags    = 0;
         data->ehn.ehn_Object   = o;
@@ -111,20 +119,71 @@ Object *AmigaVideoRender__OM_NEW(Class *CLASS, Object *self, struct opSet *messa
 IPTR AmigaVideoRender__OM_DISPOSE(Class *CLASS, Object *self, Msg message)
 {
     D(bug("86Box:%s()\n", __func__);)
+
     return DoSuperMethodA(CLASS, self, message);
 }
 
 IPTR AmigaVideoRender__OM_SET(Class *CLASS, Object *self, struct opSet *message)
 {
-    Object *o = NULL;
+    struct AmigaVideoRender_DATA *data = INST_DATA(CLASS, self);
+    struct TagItem       *tags  = message->ops_AttrList;
+    struct TagItem   	 *tag;
+    IPTR retval, activate = (IPTR)-1;
+
     D(bug("86Box:%s()\n", __func__);)
-    return DoSuperMethodA(CLASS, self, message);
+
+    while ((tag = NextTagItem(&tags)) != NULL)
+    {
+    	switch(tag->ti_Tag)
+	{
+            case MUIA_AmigaVideoRender_Activate:
+                {
+                    activate = tag->ti_Data;
+                    D(bug("86Box:%s - Activate = %d\n", __func__, tag->ti_Data);)
+                }
+                break;
+	    default:
+	    	D(bug("86Box:%s -     %08x = %p\n", __func__, tag->ti_Tag, tag->ti_Data);)
+		break;
+	}
+    }
+
+    retval =  DoSuperMethodA(CLASS, self, message);
+
+    if (activate != -1)
+    {
+        D_EVENT(bug("86Box:%s MUIA_AmigaVideoRender_Activate\n", __func__);)
+        if (activate)
+        {
+            D_EVENT(bug("86Box:%s - window active\n", __func__);)
+            data->winactive = TRUE;
+            if (data->inside)
+            {
+                mousestate.capture = 1;
+                SET(_win(self), MUIA_AmigaVideoWindow_ShowCursor, FALSE);
+            }
+            else
+            {
+                mousestate.capture = 0;
+                SET(_win(self), MUIA_AmigaVideoWindow_ShowCursor, TRUE);
+            }
+        }
+        else
+        {
+            D_EVENT(bug("86Box:%s - window inactive\n", __func__);)
+            data->winactive = FALSE;
+            mousestate.capture = 0;
+            SET(_win(self), MUIA_AmigaVideoWindow_ShowCursor, TRUE);
+        }
+    }
+
+    return(retval);
 }
 
 IPTR AmigaVideoRender__OM_GET(Class *CLASS, Object *self, struct opGet *message)
 {
-    Object *o = NULL;
     D(bug("86Box:%s()\n", __func__);)
+
     return DoSuperMethodA(CLASS, self, message);
 }
 
@@ -206,6 +265,8 @@ IPTR AmigaVideoRender__MUIM_HandleEvent(Class *CLASS, Object *self, struct MUIP_
         {
         case IDCMP_MOUSEBUTTONS:
             {
+                D_EVENT(bug("86Box:%s - button %d\n", __func__, message->imsg->Class);)
+
                 if (message->imsg->Code == SELECTDOWN)
                     mousestate.buttons |= 1;
                 else if (message->imsg->Code == SELECTUP)
@@ -223,69 +284,66 @@ IPTR AmigaVideoRender__MUIM_HandleEvent(Class *CLASS, Object *self, struct MUIP_
 
         case IDCMP_MOUSEMOVE:
             {
-                if (message->imsg->MouseX < 0)
+                UWORD width = MIN(scrnsz_x, _right(self) - _left(self) + 1);
+                UWORD height = MIN(scrnsz_y, _bottom(self) - _top(self) + 1);
+                WORD new_x = 0, new_y = 0;
+                BOOL inside = TRUE;
+
+                D_EVENT(bug("86Box:%s - mousemove %d, %d\n", __func__, message->imsg->MouseX, message->imsg->MouseY);)
+
+                if (message->imsg->MouseX < _left(self))
                 {
-                    mousestate.dx = 0;
-                    data->inside = FALSE;
+                    inside = FALSE;
                 }
-                else if (message->imsg->MouseX > scrnsz_x)
+                else if (message->imsg->MouseX > width)
                 {
-                    mousestate.dx = scrnsz_x;
-                    data->inside = FALSE;
-                }
-                else
-                {
-                    mousestate.dx = message->imsg->MouseX;
-                }
-                if (message->imsg->MouseY < 0)
-                {
-                    mousestate.dy = 0;
-                    data->inside = FALSE;
-                }
-                else if (message->imsg->MouseY > scrnsz_y)
-                {
-                    mousestate.dy = scrnsz_y;
-                    data->inside = FALSE;
+                    inside = FALSE;
                 }
                 else
                 {
-                    mousestate.dy = message->imsg->MouseX;
+                    new_x = message->imsg->MouseX - data->LastMX;
+                    data->LastMX = message->imsg->MouseX;
                 }
-                if (data->winactive && data->inside)
+
+                if (message->imsg->MouseY < _top(self))
                 {
-                    mousestate.capture = 1;
-                    if (displayWindow)
-                        SetPointer(displayWindow, (UWORD *)&data->blankCursor, 1, 1, 0, 0);
+                    inside = FALSE;
+                }
+                else if (message->imsg->MouseY > height)
+                {
+                    inside = FALSE;
+                }
+                else
+                {
+                    new_y = message->imsg->MouseY - data->LastMY;
+                    data->LastMY = message->imsg->MouseY;
+                }
+
+                if ((data->inside = inside) == TRUE)
+                {
+                    displayWindow->Flags  |= WFLG_RMBTRAP;
+                    mousestate.dx += new_x;
+                    mousestate.dy += new_y;
+                    D_EVENT(bug("86Box:%s -         = %d, %d\n", __func__, mousestate.dx, mousestate.dy);)
+                    if (data->winactive)
+                    {
+                        D_EVENT(bug("86Box:%s - mouse captured\n", __func__);)
+                        mousestate.capture = 1;
+                        SET(_win(self), MUIA_AmigaVideoWindow_ShowCursor, FALSE);
+                    }
+                    else
+                    {
+                        mousestate.capture = 0;
+                        SET(_win(self), MUIA_AmigaVideoWindow_ShowCursor, TRUE);
+                    }
                 }
                 else
                 {
                     mousestate.capture = 0;
-                    if (displayWindow)
-                        SetWindowPointer(displayWindow, WA_Pointer, NULL, TAG_DONE );
+                    displayWindow->Flags  &= ~WFLG_RMBTRAP;
+                    SET(_win(self), MUIA_AmigaVideoWindow_ShowCursor, TRUE);
                 }
             }
-            break;
-
-        case IDCMP_ACTIVEWINDOW:
-            data->winactive = TRUE;
-            if (data->inside)
-            {
-                mousestate.capture = 1;
-                if (displayWindow)
-                    SetPointer(displayWindow, (UWORD *)&data->blankCursor, 1, 1, 0, 0);
-            }
-            else
-            {
-                mousestate.capture = 0;
-                if (displayWindow)
-                    SetWindowPointer(displayWindow, WA_Pointer, NULL, TAG_DONE );
-            }
-            break;
-
-        case IDCMP_INACTIVEWINDOW:
-            data->winactive = FALSE;
-            mousestate.capture = 0;
-            SetWindowPointer(displayWindow, WA_Pointer, NULL, TAG_DONE );
             break;
 
         case IDCMP_RAWKEY:
@@ -340,11 +398,14 @@ ZUNE_CUSTOMCLASS_11
  **/
 
 struct AmigaVideoWindow_DATA {
+    Object *rendObj;
+    ULONG blankCursor;
+    BOOL cursvis;
 };
 
 Object *AmigaVideoWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 {
-    Object *o = NULL, *grp, *bar;
+    Object *o = NULL, *grp, *bar, *rend;
 
     D(bug("86Box:%s()\n", __func__);)
 
@@ -374,8 +435,8 @@ Object *AmigaVideoWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *messa
             MUIA_InnerRight,    0,
             MUIA_InnerBottom,   0,
             MUIA_Group_Spacing, 0,
-            Child, (IPTR) NewObject(AmigaVideoRender_CLASS->mcc_Class, NULL,
-            TAG_DONE),
+            Child, (IPTR)(rend = NewObject(AmigaVideoRender_CLASS->mcc_Class, NULL,
+            TAG_DONE)),
             Child, (IPTR)(bar = NewObject(AmigaStatusBar_CLASS->mcc_Class, NULL,
             TAG_DONE)),
         TAG_DONE)),
@@ -386,10 +447,13 @@ Object *AmigaVideoWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *messa
     if (o)
     {
         struct AmigaVideoWindow_DATA *data;
+
         D(bug("86Box:%s object @ 0x%p\n", __func__, o);)
         data = INST_DATA(CLASS, o);
         D(bug("86Box:%s object data @ 0x%p\n", __func__, data);)
-        
+
+        data->cursvis = TRUE;
+        data->rendObj = rend;
         maingrpObj = grp;
         statusbarObj = bar;
     }
@@ -417,6 +481,7 @@ IPTR AmigaVideoWindow__OM_DISPOSE(Class *CLASS, Object *self, Msg message)
 
 IPTR AmigaVideoWindow__OM_SET(Class *CLASS, Object *self, struct opSet *message)
 {
+    struct AmigaVideoWindow_DATA *data = INST_DATA(CLASS, self);
     struct TagItem       *tags  = message->ops_AttrList;
     struct TagItem   	 *tag;
     IPTR retval, show = (IPTR)-1;
@@ -427,9 +492,36 @@ IPTR AmigaVideoWindow__OM_SET(Class *CLASS, Object *self, struct opSet *message)
     {
     	switch(tag->ti_Tag)
 	{
+            case MUIA_Window_Activate:
+                {
+                    SET(data->rendObj, MUIA_AmigaVideoRender_Activate, tag->ti_Data);
+                }
+                break;
             case MUIA_Window_Open:
                 {
                     show = tag->ti_Data;
+                }
+                break;
+            case MUIA_AmigaVideoWindow_ShowCursor:
+                {
+                    if (tag->ti_Data)
+                    {
+                        if ((displayWindow) && (!data->cursvis))
+                        {
+                            D(bug("86Box:%s - showing cursor\n", __func__);)
+                            SetWindowPointer(displayWindow, WA_Pointer, NULL, TAG_DONE );
+                            data->cursvis = TRUE;
+                        }
+                    }
+                    else
+                    {
+                        if ((displayWindow) && (data->cursvis))
+                        {
+                            D(bug("86Box:%s - hiding cursor\n", __func__);)
+                            SetPointer(displayWindow, (UWORD *)&data->blankCursor, 1, 1, 0, 0);
+                            data->cursvis = FALSE;
+                        }                    
+                    }
                 }
                 break;
 	    default:
@@ -471,9 +563,8 @@ IPTR AmigaVideoWindow__OM_GET(Class *CLASS, Object *self, struct opGet *message)
 
 IPTR AmigaVideoWindow__MUIM_ConnectParent(Class *CLASS, Object *self, Msg message)
 {
-    IPTR retval;
-
     struct AmigaVideoWindow_DATA *data = INST_DATA(CLASS, self);
+    IPTR retval;
 
     D(bug("86Box:%s()\n", __func__);)
 
@@ -492,9 +583,8 @@ IPTR AmigaVideoWindow__MUIM_ConnectParent(Class *CLASS, Object *self, Msg messag
 
 IPTR AmigaVideoWindow__MUIM_DisconnectParent(Class *CLASS, Object *self, Msg message)
 {
-    IPTR retval;
-
     struct AmigaVideoWindow_DATA *data = INST_DATA(CLASS, self);
+    IPTR retval;
 
     D(bug("86Box:%s()\n", __func__);)
 

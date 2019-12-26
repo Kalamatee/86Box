@@ -28,10 +28,12 @@ mouse_poll(void)
     D(bug("86Box:%s()\n", __func__);)
 
     if (mousestate.capture || video_fullscreen) {
-        mouse_x = mousestate.dx;
-        mouse_y = mousestate.dy;
+        mouse_x += mousestate.dx;
+        mouse_y += mousestate.dy;
         mouse_z = mousestate.dwheel;
-
+        bug("86Box:%s - %d, %d\n", __func__, mousestate.dx, mousestate.dy);
+        mousestate.dx = 0;
+        mousestate.dy = 0;
         if (b != mousestate.buttons) {
             mouse_buttons = mousestate.buttons;
             b = mousestate.buttons;
