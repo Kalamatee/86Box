@@ -76,7 +76,7 @@ uint16_t	scancode_map[104] =
     62,
     63,
     0x39,       // 64 = Space
-    65,
+    0x0e,       // 65 = Backspace
     0xf,        // 66 = Tab
     0xe01c,     // 67 = Num Pad Enter
     0x1c,       // 68 = Return
