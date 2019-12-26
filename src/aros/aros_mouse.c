@@ -31,7 +31,7 @@ mouse_poll(void)
         mouse_x += mousestate.dx;
         mouse_y += mousestate.dy;
         mouse_z = mousestate.dwheel;
-        bug("86Box:%s - %d, %d\n", __func__, mousestate.dx, mousestate.dy);
+        D(bug("86Box:%s - %d, %d\n", __func__, mousestate.dx, mousestate.dy);)
         mousestate.dx = 0;
         mousestate.dy = 0;
         if (b != mousestate.buttons) {
