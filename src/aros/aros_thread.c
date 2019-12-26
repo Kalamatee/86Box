@@ -25,7 +25,6 @@
 #include "aros.h"
 
 extern struct Task *mainTask;
-extern ULONG timer_sigbit;
 
 struct MinList ThreadList;
 
@@ -66,10 +65,6 @@ void *thread_startup(void *arg)
         return NULL;
     }
 
-    timerport->mp_Flags = PA_SIGNAL;
-    timerport->mp_SigBit = timer_sigbit;
-    timerport->mp_SigTask = mainTask;
-
     thisTask->tc_UserData = &at->tld;
     at->tld.timerreq = (struct timerequest *)CreateIORequest(timerport, sizeof(struct timerequest));
     if (!thisTask->tc_UserData)
@@ -99,10 +94,6 @@ void *thread_startup(void *arg)
 
     CloseDevice(&at->tld.timerreq->tr_node);
 
-    timerport->mp_Flags = 0;
-    timerport->mp_SigBit = 0;
-    timerport->mp_SigTask = NULL;
-    
     DeletePort(timerport);
 
     return NULL;

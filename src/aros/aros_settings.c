@@ -388,3 +388,36 @@ aros_settings_save(void)
 
     pc_reset_hard_init();
 }
+
+#if (0)
+    Object *main_wnd = WindowObject,
+            MUIA_Window_Title, (IPTR)"",
+            MUIA_Window_Activate, TRUE,
+            MUIA_Window_CloseGadget, FALSE,
+            MUIA_Window_ID, MAKE_ID('8','6','R','W'),
+
+            WindowContents, VGroup,
+                MUIA_Group_VertSpacing, 10,
+                Child, HGroup,
+                  Child, VGroup,
+                    Child, ListviewObject,
+                        MUIA_CycleChain, 1,
+                        MUIA_Listview_List, main_page_list = ListObject,
+                            InputListFrame,
+                            MUIA_List_AdjustWidth, TRUE,
+                            MUIA_List_Format, ",",
+                            MUIA_List_DisplayHook, &page_display_hook,
+                            End,
+                    End,
+                    Child, VGroup,
+                        TextFrame,
+                        InnerSpacing(6,6),
+                        MUIA_Background, MUII_PageBack,
+                        Child, main_page_group = VGroup,
+                            Child, main_page_group_displayed = main_page_space = HVSpace,
+                        End,
+                    End,
+                End,
+            End,
+        End;
+#endif

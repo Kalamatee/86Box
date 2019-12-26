@@ -10,7 +10,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- local-86box : local-86box-$(AROS_TARGET_CPU)
 #MM- local-86box-i386 : local-86box-binary
 #MM- local-86box-x86_64 : local-86box-binary
-#MM local-86box-binary : contrib-sdl contrib-openal iconset-Gorilla-86box-icons
+#MM local-86box-binary : contrib-openal iconset-Gorilla-86box-icons local-86box-copyfiles
 
 #MM- local-86box-quick : local-86box-$(AROS_TARGET_CPU)-quick
 #MM- local-86box-i386-quick : local-86box-binary-quick
@@ -646,7 +646,25 @@ USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
 %build_prog mmake=local-86box-binary \
     progname=$(PROG) targetdir=$(EXEDIR) \
     files="$(PLATFILES) $(FILES)" cxxfiles="$(CXXFILES)" \
-    uselibs="SDL png openal z"
+    uselibs="SDL png openal z amiga"
+
+
+$(EXEDIR)/86Box.png: $(SRCDIR)/$(CURDIR)/aros/86Box.png
+		@$(CP) $< $@
+
+$(EXEDIR)/COPYING: $(SRCDIR)/$(CURDIR)/../COPYING
+		@$(CP) $< $@
+
+
+#MM local-86box-copyfiles : local-86box-dir
+
+local-86box-copyfiles: \
+        $(EXEDIR)/86Box.png \
+        $(EXEDIR)/COPYING
+
+#MM
+local-86box-dir :
+	%mkdirs_q $(EXEDIR)
 
 %common
 

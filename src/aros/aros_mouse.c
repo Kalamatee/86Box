@@ -14,11 +14,27 @@
 
 #include "../86box.h"
 #include "../plat.h"
+#include "../mouse.h"
 
-int mouse_capture;
+#include "aros_mouse.h"
+
+MOUSESTATE mousestate;
 
 void
 mouse_poll(void)
 {
+    static int b = 0;
+
     D(bug("86Box:%s()\n", __func__);)
+
+    if (mousestate.capture || video_fullscreen) {
+        mouse_x = mousestate.dx;
+        mouse_y = mousestate.dy;
+        mouse_z = mousestate.dwheel;
+
+        if (b != mousestate.buttons) {
+            mouse_buttons = mousestate.buttons;
+            b = mousestate.buttons;
+        }
+    }
 }
