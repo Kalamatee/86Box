@@ -17,6 +17,7 @@
 #include <cybergraphx/cybergraphics.h>
 #include <libraries/mui.h>
 #include <zune/customclasses.h>
+#include <utility/tagitem.h>
 
 #include <stdint.h>
 #include <stdio.h>
@@ -41,6 +42,7 @@ extern MOUSESTATE mousestate;
 extern Object *app;
 
 static volatile int amigavid_enabled = 0;
+struct Screen *dispScreen = NULL;
 Object *main_wnd = NULL;
 Object *maingrpObj = NULL;
 Object *statusbarObj = NULL;
@@ -729,6 +731,9 @@ int amigavid_init(APTR h)
     {
         D(bug("86Box:%s - window object @ 0x%p\n", __func__, main_wnd);)
         SET(main_wnd, MUIA_Window_Open, TRUE);
+
+        dispScreen = LockPubScreen(NULL);
+        UnlockPubScreen(NULL, dispScreen);
 
         /* Register our renderer! */
         video_setblit(amiga_blit);

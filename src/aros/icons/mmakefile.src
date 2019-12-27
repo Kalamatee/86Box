@@ -3,10 +3,21 @@
 
 include $(SRCDIR)/config/aros.cfg
 
+EXEDIR := $(AROS_CONTRIB)/Emu/86box
+
 BASEICONS := \
          86box
 
-#MM- iconset-Gorilla-86box-icons-clean : iconset-Gorilla-86box-icons-aros-clean
-#MM- iconset-Gorilla-86box-icons : iconset-Gorilla-86box-icons-app
+#MM- iconset-Gorilla-icons-clean : iconset-Gorilla-86box-icons-app-clean iconset-Gorilla-86box-icons-gui-clean
+#MM- iconset-Gorilla-86box-icons : iconset-Gorilla-86box-icons-app iconset-Gorilla-86box-icons-gui
+#MM- iconset-Gorilla-86box-icons-gui : iconset-Gorilla-86box-icons-cdrom
+#MM- iconset-Gorilla-86box-icons-gui : iconset-Gorilla-86box-icons-hard_disk
+#MM- iconset-Gorilla-86box-icons-gui : iconset-Gorilla-86box-icons-network
+#MM- iconset-Gorilla-86box-icons-gui : iconset-Gorilla-86box-icons-zip
 
-%build_icons mmake=iconset-Gorilla-86box-icons-app icons=$(BASEICONS) dir=$(AROS_CONTRIB)/Emu/86box
+%build_icons mmake=iconset-Gorilla-86box-icons-app icons=$(BASEICONS) dir=$(EXEDIR)
+
+%build_dualicon mmake=iconset-Gorilla-86box-icons-cdrom icon=cdrom normal=cdrom selected=cdrom_active dir=$(EXEDIR)/icons
+%build_dualicon mmake=iconset-Gorilla-86box-icons-hard_disk icon=hard_disk normal=hard_disk selected=hard_disk_active dir=$(EXEDIR)/icons
+%build_dualicon mmake=iconset-Gorilla-86box-icons-network icon=network normal=network selected=network_active dir=$(EXEDIR)/icons
+%build_dualicon mmake=iconset-Gorilla-86box-icons-zip icon=zip normal=zip selected=zip_active dir=$(EXEDIR)/icons
